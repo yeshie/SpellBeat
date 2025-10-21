@@ -7,7 +7,18 @@ public class User {
     private String password;
     private int age;
 
-    // getters & setters
+    // Default constructor
+    public User() {}
+
+    // Parameterized constructor
+    public User(String name, String email, String password, int age) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.age = age;
+    }
+
+    // Getters & setters...
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 

@@ -67,3 +67,59 @@
     -fx-text-fill: #BF6A5F;
     -fx-cursor: hand;
 }
+/* ---------------- Player Profile Page ---------------- */
+
+/* Root background gradient */
+.profile-root {
+    -fx-background-color: linear-gradient(to bottom, #FFB6C1, #FFFFE0); /* Pink to Yellow */
+}
+
+/* Card container */
+.profile-card {
+    -fx-background-color: rgba(255,255,255,0.8);
+    -fx-background-radius: 20;
+    -fx-padding: 30px;
+    -fx-spacing: 15px;
+    -fx-alignment: center;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+}
+
+/* Title */
+.profile-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Arial";
+}
+
+/* Labels */
+.profile-label {
+    -fx-font-size: 16px;
+    -fx-font-family: "Arial";
+}
+
+/* TextField */
+.profile-textfield {
+    -fx-pref-width: 300px;
+    -fx-pref-height: 40px;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-border-color: #C3CFE2;
+    -fx-border-width: 1.5px;
+    -fx-padding: 0 10 0 10;
+}
+
+/* Button */
+.profile-button {
+    -fx-background-color: #FF9999;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-background-radius: 10px;
+    -fx-padding: 12 20 12 20;
+}
+
+/* Avatar container */
+.avatar-box {
+    -fx-alignment: center;
+    -fx-spacing: 15px;
+}

@@ -1,6 +1,6 @@
 package com.wordheartschallenge.app.controllers;
 
-import com.wordheartschallenge.app.services.AuthService;
+import com.wordheartschallenge.app.models.User;
 import com.wordheartschallenge.app.utils.SceneManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -14,72 +14,122 @@ import javafx.scene.text.Font;
 public class RegisterController {
 
     public static Scene createScene() {
-        BorderPane root = new BorderPane();
-        root.setPadding(new Insets(20));
+        HBox root = new HBox();
 
-        HBox topBox = new HBox(12);
-        topBox.setAlignment(Pos.CENTER_LEFT);
+        // --- Left Panel (Gradient + Logo + Slogan) ---
+        VBox leftPanel = new VBox(10);
+        leftPanel.getStyleClass().add("left-panel");
+        leftPanel.setPrefWidth(450);
+        leftPanel.setAlignment(Pos.CENTER);
+
         ImageView logo = new ImageView(new Image(RegisterController.class.getResourceAsStream("/images/logo.png")));
-        logo.setFitHeight(44);
+        logo.setFitWidth(300);
         logo.setPreserveRatio(true);
-        Label title = new Label("Create account");
-        title.setFont(Font.font("Inter", 20));
-        topBox.getChildren().addAll(logo, title);
-        root.setTop(topBox);
 
-        VBox form = new VBox(10);
-        form.setPadding(new Insets(30));
-        form.setAlignment(Pos.CENTER);
+        Label slogan1 = new Label("Dive into the rhythm of words.");
+        slogan1.setFont(Font.font("Serif", 18));
+        slogan1.setStyle("-fx-text-fill: white;");
 
-        TextField nameField = new TextField(); nameField.setPromptText("Full name");
-        TextField emailField = new TextField(); emailField.setPromptText("Email (gmail)");
-        PasswordField passwordField = new PasswordField(); passwordField.setPromptText("Password");
-        PasswordField confirmField = new PasswordField(); confirmField.setPromptText("Confirm password");
-        TextField ageField = new TextField(); ageField.setPromptText("Age");
+        Label slogan2 = new Label("Every word you spell keeps your beat alive.");
+        slogan2.setFont(Font.font("Serif", 18));
+        slogan2.setStyle("-fx-text-fill: brown;");
 
-        Button registerBtn = new Button("Register");
-        registerBtn.getStyleClass().add("primary-button");
-        registerBtn.setMaxWidth(Double.MAX_VALUE);
+        Label slogan3 = new Label("Start your story today!");
+        slogan3.setFont(Font.font("Serif", 18));
+        slogan3.setStyle("-fx-text-fill: brown;");
 
-        Button backBtn = new Button("Back to Login");
-        backBtn.setMaxWidth(Double.MAX_VALUE);
+        leftPanel.getChildren().addAll(logo, slogan1, slogan2, slogan3);
+        leftPanel.setPadding(new Insets(40, 20, 40, 20));
 
-        form.getChildren().addAll(nameField, emailField, passwordField, confirmField, ageField, registerBtn, backBtn);
-        root.setCenter(form);
+        // --- Right Panel (Register Form) ---
+        VBox rightPanel = new VBox(15);
+        rightPanel.getStyleClass().add("right-panel");
+        rightPanel.setPrefWidth(450);
+        rightPanel.setAlignment(Pos.TOP_CENTER);
 
-        // events
-        registerBtn.setOnAction(e -> {
-            String name = nameField.getText().trim();
+        VBox formCard = new VBox(15);
+        formCard.getStyleClass().add("form-card");
+        formCard.setAlignment(Pos.CENTER);
+
+        Label title = new Label("Create an account");
+        title.getStyleClass().add("label-title");
+
+        Label subtitle = new Label("Join SpellBeat and keep your beat alive!");
+        subtitle.getStyleClass().add("label-subtitle");
+
+        TextField emailField = new TextField();
+        emailField.setPromptText("Email Address");
+
+        TextField nameField = new TextField();
+        nameField.setPromptText("Full Name");
+
+        TextField ageField = new TextField();
+        ageField.setPromptText("Age"); // New age field
+
+        PasswordField passwordField = new PasswordField();
+        passwordField.setPromptText("Password");
+
+        PasswordField confirmField = new PasswordField();
+        confirmField.setPromptText("Confirm Password");
+
+        Button createBtn = new Button("Create an account");
+        createBtn.getStyleClass().add("primary-button");
+        createBtn.setMaxWidth(Double.MAX_VALUE);
+
+        // --- Login Link ---
+        HBox loginBox = new HBox(5);
+        loginBox.setAlignment(Pos.CENTER);
+        Label alreadyLabel = new Label("Already have an account?");
+        Label loginLink = new Label("Login");
+        loginLink.getStyleClass().add("link-label");
+        loginLink.setOnMouseClicked(e -> SceneManager.switchScene(LoginController.createScene()));
+        loginBox.getChildren().addAll(alreadyLabel, loginLink);
+
+        formCard.getChildren().addAll(title, subtitle, emailField, nameField, ageField,
+                passwordField, confirmField, createBtn, loginBox);
+        rightPanel.getChildren().add(formCard);
+
+        root.getChildren().addAll(leftPanel, rightPanel);
+
+        Scene scene = new Scene(root, 900, 600);
+        scene.getStylesheets().add(RegisterController.class.getResource("/css/style.css").toExternalForm());
+
+        // --- Button Action ---
+        createBtn.setOnAction(e -> {
             String email = emailField.getText().trim();
-            String pass = passwordField.getText().trim();
-            String confirm = confirmField.getText().trim();
+            String name = nameField.getText().trim();
             String ageText = ageField.getText().trim();
+            String password = passwordField.getText().trim();
+            String confirm = confirmField.getText().trim();
 
-            if (name.isEmpty() || email.isEmpty() || pass.isEmpty() || confirm.isEmpty() || ageText.isEmpty()) {
-                showAlert(Alert.AlertType.ERROR, "Please fill all fields.");
+            if(email.isEmpty() || name.isEmpty() || ageText.isEmpty() || password.isEmpty() || confirm.isEmpty()) {
+                showAlert(Alert.AlertType.ERROR, "Please fill all fields!");
                 return;
             }
-            if (!pass.equals(confirm)) {
-                showAlert(Alert.AlertType.ERROR, "Passwords do not match.");
-                return;
-            }
+
             int age;
-            try { age = Integer.parseInt(ageText); }
-            catch (NumberFormatException ex) { showAlert(Alert.AlertType.ERROR, "Age must be a number."); return; }
-
-            boolean ok = AuthService.register(name, email, pass, age);
-            if (ok) {
-                showAlert(Alert.AlertType.INFORMATION, "Registration successful. Please login.");
-                SceneManager.switchScene(LoginController.createScene());
-            } else {
-                showAlert(Alert.AlertType.ERROR, "Registration failed. Email may already exist.");
+            try {
+                age = Integer.parseInt(ageText);
+            } catch(NumberFormatException ex) {
+                showAlert(Alert.AlertType.ERROR, "Please enter a valid age!");
+                return;
             }
+
+            if(!password.equals(confirm)) {
+                showAlert(Alert.AlertType.ERROR, "Passwords do not match!");
+                return;
+            }
+
+            // Create user and pass to PlayerProfile
+            User user = new User();
+            user.setName(name);
+            user.setEmail(email);
+            user.setPassword(password);
+            user.setAge(age);
+
+            SceneManager.switchScene(PlayerProfileController.createScene(user));
         });
 
-        backBtn.setOnAction(e -> SceneManager.switchScene(LoginController.createScene()));
-
-        Scene scene = new Scene(root, 780, 520);
-        scene.getStylesheets().add(RegisterController.class.getResource("/css/style.css").toExternalForm());
         return scene;
     }
 
