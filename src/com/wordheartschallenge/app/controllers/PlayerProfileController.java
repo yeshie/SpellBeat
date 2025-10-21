@@ -1,7 +1,7 @@
 package com.wordheartschallenge.app.controllers;
 
 import com.wordheartschallenge.app.models.User;
-import com.wordheartschallenge.app.utils.SceneManager;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -9,98 +9,127 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
 
 import java.io.InputStream;
 
 public class PlayerProfileController {
 
-    public static Scene createScene(User user) {
-        HBox root = new HBox();
+    private Scene scene;
 
-        // --- Left Panel (Gradient + Logo) ---
-        VBox leftPanel = new VBox(20);
-        leftPanel.getStyleClass().add("left-panel");
-        leftPanel.setPrefWidth(450);
-        leftPanel.setAlignment(Pos.CENTER);
+    public Scene createScene(User user) {
 
-        Image logoImg = loadImage("/images/logo.png", 300);
-        ImageView logo = new ImageView(logoImg);
-        logo.setFitWidth(300);
-        logo.setPreserveRatio(true);
+        // ===== Background Layer (Gradient) =====
+        StackPane backgroundLayer = new StackPane();
+        backgroundLayer.getStyleClass().add("profile-root"); // gradient defined in CSS
 
-        leftPanel.getChildren().add(logo);
+        // ===== Centered Logo =====
+        InputStream logoStream = getClass().getResourceAsStream("/images/logo.png");
+        ImageView logo = new ImageView();
+        if (logoStream != null) {
+            logo.setImage(new Image(logoStream));
+            logo.setFitWidth(450);
+            logo.setPreserveRatio(true);
+        } else {
+            System.err.println("Logo image not found!");
+        }
+        StackPane.setAlignment(logo, Pos.CENTER);
 
-        // --- Right Panel (Profile Form) ---
-        VBox rightPanel = new VBox(15);
-        rightPanel.getStyleClass().add("right-panel");
-        rightPanel.setPrefWidth(450);
-        rightPanel.setAlignment(Pos.TOP_CENTER);
+        backgroundLayer.getChildren().add(logo);
 
-        VBox profileCard = new VBox(15);
-        profileCard.getStyleClass().add("form-card");
-        profileCard.setAlignment(Pos.CENTER);
+        // ===== Transparent Form Card =====
+        VBox formCard = new VBox(15);
+        formCard.setAlignment(Pos.CENTER);
+        formCard.getStyleClass().add("profile-card"); // CSS class
 
-        Label title = new Label("Create Your Player Profile");
-        title.setFont(Font.font("Serif", 28));
+        // ===== Title =====
+        Label title = new Label("Player Profile");
+        title.getStyleClass().add("profile-title");
 
-        Label nameLabel = new Label("Choose Your Player Name");
-        nameLabel.setFont(Font.font(16));
+        // ===== Input Fields =====
+        TextField usernameField = new TextField(user.getName());
+        usernameField.setPromptText("Enter username");
+        usernameField.getStyleClass().add("profile-textfield");
 
-        TextField nameField = new TextField(user.getName()); // Pre-fill with registered name
-        nameField.setFont(Font.font(16));
+        Label avatarLabel = new Label("Choose your avatar:");
+        avatarLabel.getStyleClass().add("profile-label");
 
-        Label avatarLabel = new Label("Choose Your Avatar");
-        avatarLabel.setFont(Font.font(16));
-
-        HBox avatarBox = new HBox(15);
+        // ===== Avatar Selection =====
+        HBox avatarBox = new HBox(20);
         avatarBox.setAlignment(Pos.CENTER);
+        avatarBox.getStyleClass().add("avatar-box");
 
         ToggleGroup avatarGroup = new ToggleGroup();
-        for (int i = 1; i <= 4; i++) {
-            Image avatarImg = loadImage("/images/avatar" + i + ".png", 80);
-            ImageView avatarView = new ImageView(avatarImg);
-            avatarView.setFitWidth(80);
-            avatarView.setPreserveRatio(true);
+        String[] avatars = {
+                "/images/avatar1.png",
+                "/images/avatar2.png",
+                "/images/avatar3.png",
+                "/images/avatar4.png"
+        };
 
-            RadioButton rb = new RadioButton();
-            rb.setGraphic(avatarView);
-            rb.setToggleGroup(avatarGroup);
-            avatarBox.getChildren().add(rb);
+        for (String path : avatars) {
+            InputStream avatarStream = getClass().getResourceAsStream(path);
+            ImageView avatarImg = new ImageView();
+            if (avatarStream != null) {
+                avatarImg.setImage(new Image(avatarStream));
+                avatarImg.setFitWidth(80);
+                avatarImg.setFitHeight(80);
+            } else {
+                System.err.println("Avatar image not found: " + path);
+            }
+
+            RadioButton avatarButton = new RadioButton();
+            avatarButton.setGraphic(avatarImg);
+            avatarButton.setToggleGroup(avatarGroup);
+            avatarBox.getChildren().add(avatarButton);
         }
 
-        Button playButton = new Button("Let's Play!");
-        playButton.getStyleClass().add("primary-button");
-        playButton.setMaxWidth(Double.MAX_VALUE);
+        // ===== Save Button =====
+        Button saveButton = new Button("Save Profile");
+        saveButton.getStyleClass().add("profile-button");
+        VBox.setMargin(saveButton, new Insets(40, 0, 0, 0)); // top, right, bottom, left
 
-        profileCard.getChildren().addAll(title, nameLabel, nameField, avatarLabel, avatarBox, playButton);
-        rightPanel.getChildren().add(profileCard);
+        saveButton.setOnAction(e -> {
+            String username = usernameField.getText();
 
-        root.getChildren().addAll(leftPanel, rightPanel);
+            RadioButton selectedAvatar = (RadioButton) avatarGroup.getSelectedToggle();
+            if (username.isEmpty()) {
+                showAlert("Error", "Please enter username.");
+                return;
+            }
+            if (selectedAvatar == null) {
+                showAlert("Error", "Please select an avatar.");
+                return;
+            }
 
-        Scene scene = new Scene(root, 900, 600);
-        scene.getStylesheets().add(PlayerProfileController.class.getResource("/css/style.css").toExternalForm());
+            System.out.println("✅ Player Profile Saved:");
+            System.out.println("Name: " + username);
+            System.out.println("Avatar selected!");
 
-        playButton.setOnAction(e -> {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Profile created! Ready to play, " + nameField.getText());
-            alert.showAndWait();
-            // TODO: Switch to main game scene
+            showAlert("Success", "Profile saved successfully!");
         });
+
+        // ===== Add components to form card =====
+        formCard.getChildren().addAll(title, usernameField, avatarLabel, avatarBox, saveButton);
+
+        // ===== Stack layout =====
+        StackPane root = new StackPane(backgroundLayer, formCard);
+        root.setAlignment(Pos.CENTER);
+
+        this.scene = new Scene(root, 900, 600);
+        this.scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
 
         return scene;
     }
 
-    /**
-     * Utility method to load an image safely.
-     * If the image is missing, uses a placeholder.
-     */
-    private static Image loadImage(String path, double width) {
-        InputStream stream = PlayerProfileController.class.getResourceAsStream(path);
-        if (stream != null) {
-            return new Image(stream, width, 0, true, true);
-        } else {
-            System.err.println("Image not found: " + path);
-            return new Image("https://via.placeholder.com/" + (int) width); // temporary placeholder
-        }
+    private void showAlert(String title, String msg) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(msg);
+        alert.showAndWait();
+    }
+
+    public Scene getScene() {
+        return scene;
     }
 }

@@ -127,7 +127,9 @@ public class RegisterController {
             user.setPassword(password);
             user.setAge(age);
 
-            SceneManager.switchScene(PlayerProfileController.createScene(user));
+            PlayerProfileController profileUI = new PlayerProfileController();
+            SceneManager.switchScene(profileUI.createScene(user));
+
         });
 
         return scene;

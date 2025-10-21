@@ -67,22 +67,28 @@
     -fx-text-fill: #BF6A5F;
     -fx-cursor: hand;
 }
-/* ---------------- Player Profile Page ---------------- */
-
-/* Root background gradient */
+/* Root gradient for Player Profile */
 .profile-root {
-    -fx-background-color: linear-gradient(to bottom, #FFB6C1, #FFFFE0); /* Pink to Yellow */
+    -fx-background-color: linear-gradient(to bottom, #FFB6C1, #FFFFE0); /* pink to yellow */
 }
 
 /* Card container */
 .profile-card {
-    -fx-background-color: rgba(255,255,255,0.8);
-    -fx-background-radius: 20;
+    -fx-background-color: rgba(255,255,255,0.85);
+    -fx-background-radius: 20px;
     -fx-padding: 30px;
     -fx-spacing: 15px;
     -fx-alignment: center;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
+
+    /* Size control */
+    -fx-pref-width: 400px;
+    -fx-pref-height: 400px;
+    -fx-max-width: 450px;
+    -fx-max-height: 450px;
 }
+
+    
 
 /* Title */
 .profile-title {
@@ -116,6 +122,7 @@
     -fx-font-size: 16px;
     -fx-background-radius: 10px;
     -fx-padding: 12 20 12 20;
+    -fx-margin-top: 40px;
 }
 
 /* Avatar container */
