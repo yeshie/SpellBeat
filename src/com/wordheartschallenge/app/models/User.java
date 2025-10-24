@@ -6,11 +6,10 @@ public class User {
     private String email;
     private String password;
     private int age;
+    private String avatarPath; // added for profile image
 
-    // Default constructor
     public User() {}
 
-    // Parameterized constructor
     public User(String name, String email, String password, int age) {
         this.name = name;
         this.email = email;
@@ -18,7 +17,7 @@ public class User {
         this.age = age;
     }
 
-    // Getters & setters...
+    // Getters & Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
@@ -33,4 +32,7 @@ public class User {
 
     public int getAge() { return age; }
     public void setAge(int age) { this.age = age; }
+
+    public String getAvatarPath() { return avatarPath; }
+    public void setAvatarPath(String avatarPath) { this.avatarPath = avatarPath; }
 }

@@ -1,7 +1,6 @@
 package com.wordheartschallenge.app.controllers;
 
 import com.wordheartschallenge.app.models.User;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -9,54 +8,60 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-
+import javafx.stage.Stage;
 import java.io.InputStream;
 
 public class PlayerProfileController {
 
     private Scene scene;
+    private Stage stage;
 
-    public Scene createScene(User user) {
+    /** ✅ Make it static to match pattern */
+    public static Scene createScene(User user) {
+        PlayerProfileController ctrl = new PlayerProfileController();
+        return ctrl.buildScene(user);
+    }
 
-        // ===== Background Layer (Gradient) =====
+    private Scene buildScene(User user) {
+        // Background
         StackPane backgroundLayer = new StackPane();
-        backgroundLayer.getStyleClass().add("profile-root"); // gradient defined in CSS
+        backgroundLayer.getStyleClass().add("profile-root");
 
-        // ===== Centered Logo =====
+        // Logo
         InputStream logoStream = getClass().getResourceAsStream("/images/logo.png");
         ImageView logo = new ImageView();
         if (logoStream != null) {
             logo.setImage(new Image(logoStream));
-            logo.setFitWidth(450);
+            logo.setFitWidth(400);
             logo.setPreserveRatio(true);
-        } else {
-            System.err.println("Logo image not found!");
         }
         StackPane.setAlignment(logo, Pos.CENTER);
-
         backgroundLayer.getChildren().add(logo);
 
-        // ===== Transparent Form Card =====
+        // Form Card
         VBox formCard = new VBox(15);
         formCard.setAlignment(Pos.CENTER);
-        formCard.getStyleClass().add("profile-card"); // CSS class
+        formCard.getStyleClass().add("profile-card");
+        formCard.setMaxWidth(450);
+        formCard.setPadding(new Insets(30));
 
-        // ===== Title =====
+        // Title
         Label title = new Label("Player Profile");
         title.getStyleClass().add("profile-title");
 
-        // ===== Input Fields =====
+        // Username
         TextField usernameField = new TextField(user.getName());
         usernameField.setPromptText("Enter username");
         usernameField.getStyleClass().add("profile-textfield");
 
+        // Avatar Selection
         Label avatarLabel = new Label("Choose your avatar:");
         avatarLabel.getStyleClass().add("profile-label");
 
-        // ===== Avatar Selection =====
         HBox avatarBox = new HBox(20);
         avatarBox.setAlignment(Pos.CENTER);
-        avatarBox.getStyleClass().add("avatar-box");
+        avatarBox.setStyle("-fx-padding:10;");
+        avatarBox.setMaxWidth(400);
 
         ToggleGroup avatarGroup = new ToggleGroup();
         String[] avatars = {
@@ -73,27 +78,26 @@ public class PlayerProfileController {
                 avatarImg.setImage(new Image(avatarStream));
                 avatarImg.setFitWidth(80);
                 avatarImg.setFitHeight(80);
-            } else {
-                System.err.println("Avatar image not found: " + path);
             }
 
             RadioButton avatarButton = new RadioButton();
             avatarButton.setGraphic(avatarImg);
             avatarButton.setToggleGroup(avatarGroup);
+            avatarButton.setUserData(path);
             avatarBox.getChildren().add(avatarButton);
         }
 
-        // ===== Save Button =====
-        Button saveButton = new Button("Save Profile");
-        saveButton.getStyleClass().add("profile-button");
-        VBox.setMargin(saveButton, new Insets(40, 0, 0, 0)); // top, right, bottom, left
+        // Let's Play Button
+        Button letsPlayButton = new Button("Let's Play");
+        letsPlayButton.getStyleClass().add("profile-button");
+        VBox.setMargin(letsPlayButton, new Insets(40, 0, 0, 0));
 
-        saveButton.setOnAction(e -> {
+        letsPlayButton.setOnAction(e -> {
             String username = usernameField.getText();
-
             RadioButton selectedAvatar = (RadioButton) avatarGroup.getSelectedToggle();
+
             if (username.isEmpty()) {
-                showAlert("Error", "Please enter username.");
+                showAlert("Error", "Please enter a username.");
                 return;
             }
             if (selectedAvatar == null) {
@@ -101,17 +105,17 @@ public class PlayerProfileController {
                 return;
             }
 
-            System.out.println("✅ Player Profile Saved:");
-            System.out.println("Name: " + username);
-            System.out.println("Avatar selected!");
+            String avatarPath = (String) selectedAvatar.getUserData();
+            user.setName(username);
+            user.setAvatarPath(avatarPath);
 
-            showAlert("Success", "Profile saved successfully!");
+            // Navigate to HomeController (defaults level=1, hearts=5)
+            Stage stage = (Stage) letsPlayButton.getScene().getWindow();
+            HomeController.createScene(user, 1, 5, stage);
         });
 
-        // ===== Add components to form card =====
-        formCard.getChildren().addAll(title, usernameField, avatarLabel, avatarBox, saveButton);
+        formCard.getChildren().addAll(title, usernameField, avatarLabel, avatarBox, letsPlayButton);
 
-        // ===== Stack layout =====
         StackPane root = new StackPane(backgroundLayer, formCard);
         root.setAlignment(Pos.CENTER);
 

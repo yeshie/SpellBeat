@@ -1,110 +1,56 @@
-/* Root background */
-.root {
-    -fx-background-color: linear-gradient(to bottom right, #FFEABB, #FFAAAA); /* left gradient color */
+/* ======================================================
+   🎮 WordHearts Challenge — Unified UI Theme (Full)
+   ====================================================== */
+
+/* ===== Root Background (Updated Gradient) ===== */
+.root, .game-root, .profile-root {
+    -fx-background-color: linear-gradient(to bottom right, #FF8BBB, #FFF174);
 }
 
-/* Left panel */
+/* ===== Left Panel (Login) ===== */
 .left-panel {
     -fx-background-color: linear-gradient(to bottom, #FFAABB, #FFE59E);
     -fx-alignment: center;
 }
 
-/* Right panel */
+/* ===== Right Panel (Login) ===== */
 .right-panel {
     -fx-background-color: #FCF8DB;
     -fx-padding: 50px;
     -fx-alignment: center;
 }
 
-/* Form card */
-.form-card {
-    -fx-background-color: #FFFFFF;
-    -fx-padding: 30px;
-    -fx-spacing: 15px;
-    -fx-alignment: center;
-    -fx-background-radius: 15px;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
-}
-
-/* Title */
-.label-title {
-    -fx-font-size: 36px;
-    -fx-font-weight: bold;
-    -fx-font-family: "Serif";
-    -fx-text-fill: #59504B; /* Dark text */
-}
-
-/* Subtitle */
-.label-subtitle {
-    -fx-font-size: 14px;
-    -fx-font-family: "Serif";
-    -fx-text-fill: #59504B;
-}
-
-/* Input Fields */
-.text-field, .password-field {
-    -fx-pref-width: 300px;
-    -fx-pref-height: 40px;
-    -fx-background-radius: 10px;
-    -fx-border-radius: 10px;
-    -fx-border-color: #C3CFE2;
-    -fx-border-width: 1.5px;
-    -fx-padding: 0 10 0 10;
-}
-
-/* Buttons */
-.primary-button {
-    -fx-background-color: #ED8990; /* Pink button */
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-font-size: 16px;
-    -fx-background-radius: 10px;
-    -fx-padding: 12 0 12 0;
-}
-
-.link-label {
-    -fx-font-weight: bold;
-    -fx-text-fill: #BF6A5F;
-    -fx-cursor: hand;
-}
-/* Root gradient for Player Profile */
-.profile-root {
-    -fx-background-color: linear-gradient(to bottom, #FFB6C1, #FFFFE0); /* pink to yellow */
-}
-
-/* Card container */
-.profile-card {
-    -fx-background-color: rgba(255,255,255,0.85);
+/* ===== Form Card (Login/Profile) ===== */
+.form-card, .profile-card {
+    -fx-background-color: rgba(255, 255, 255, 0.85);
     -fx-background-radius: 20px;
     -fx-padding: 30px;
     -fx-spacing: 15px;
     -fx-alignment: center;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
-
-    /* Size control */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 2);
     -fx-pref-width: 400px;
     -fx-pref-height: 400px;
     -fx-max-width: 450px;
     -fx-max-height: 450px;
 }
 
-    
-
-/* Title */
-.profile-title {
+/* ===== Titles ===== */
+.label-title, .profile-title, .game-title {
     -fx-font-size: 28px;
     -fx-font-weight: bold;
-    -fx-font-family: "Arial";
+    -fx-font-family: "Serif";
+    -fx-text-fill: #59504B;
 }
 
-/* Labels */
-.profile-label {
+/* ===== Subtitles and Labels ===== */
+.label-subtitle, .profile-label, .game-info-label {
     -fx-font-size: 16px;
-    -fx-font-family: "Arial";
+    -fx-font-family: "Serif";
+    -fx-text-fill: #59504B;
 }
 
-/* TextField */
-.profile-textfield {
+/* ===== Input Fields ===== */
+.text-field, .password-field, .profile-textfield {
     -fx-pref-width: 300px;
     -fx-pref-height: 40px;
     -fx-background-radius: 10px;
@@ -114,19 +60,484 @@
     -fx-padding: 0 10 0 10;
 }
 
-/* Button */
-.profile-button {
-    -fx-background-color: #FF9999;
+/* ===== Buttons ===== */
+.primary-button, .profile-button, .level-play-button, .game-play-button {
+    -fx-background-color: #ED8990;
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-font-size: 16px;
     -fx-background-radius: 10px;
     -fx-padding: 12 20 12 20;
-    -fx-margin-top: 40px;
+    -fx-cursor: hand;
 }
 
-/* Avatar container */
-.avatar-box {
-    -fx-alignment: center;
-    -fx-spacing: 15px;
+.primary-button:hover, .profile-button:hover, .level-play-button:hover, .game-play-button:hover {
+    -fx-background-color: #d47a80;
 }
+
+/* ===== Links ===== */
+.link-label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #BF6A5F;
+    -fx-cursor: hand;
+}
+
+/* ===== HomeController UI Styles ===== */
+
+/* ======================================================
+   🎮 WordHearts Challenge — HomeController UI Styles
+   ====================================================== */
+
+/* ===== Root Background ===== */
+.game-root {
+    -fx-background-color: linear-gradient(to bottom, #FFB3C1, #FFF3A5);
+    -fx-padding: 20px;
+}
+
+/* ===== Top Bar (Invisible) ===== */
+.home-top-bar {
+    -fx-background-color: transparent; /* No visible bar */
+    -fx-padding: 0 24px;               /* Horizontal spacing */
+    -fx-alignment: center;
+    -fx-spacing: 40px;                 /* Space between sections */
+    -fx-pref-height: 60px;             /* Uniform height for all top elements */
+}
+
+/* ===== Top Left Section ===== */
+.top-left-section {
+    -fx-alignment: center-left;
+    -fx-spacing: 12px;                 /* Slightly more spacing between items */
+}
+
+/* ===== Chips (Avatar, Heart, Level, Home Button) ===== */
+.home-chip {
+    -fx-background-color: #F5F7CA;
+    -fx-background-radius: 999px;
+    -fx-min-height: 40px;
+    -fx-max-height: 40px;
+    -fx-alignment: center;
+    -fx-spacing: 6px;
+    -fx-padding: 6 10; /* default padding */
+}
+
+/* ===== Avatar chip wider for username ===== */
+.home-chip.wide {
+    -fx-padding: 6 14;
+}
+
+/* ===== Labels inside chips ===== */
+.home-chip-label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #555;
+}
+
+/* ===== Home Button inside top bar ===== */
+.home-button {
+    -fx-background-color: #F5F7CA;
+    -fx-background-radius: 999px;
+    -fx-min-height: 40px;
+    -fx-max-height: 40px;
+    -fx-padding: 6 12;
+    -fx-cursor: hand;
+}
+
+.home-button:hover {
+    -fx-background-color: #EAEFC7; /* slightly darker on hover */
+}
+
+
+/* ===== Right Info Chips (Hearts & Level) ===== */
+.home-info-chip {
+    -fx-background-color: #F5F7CA;     /* Same uniform chip color */
+    -fx-background-radius: 999px;
+    -fx-padding: 6 12;                 /* Match avatar chip height */
+    -fx-alignment: center;
+    -fx-spacing: 6px;
+    -fx-min-height: 40px;               /* Uniform height */
+}
+
+.home-info-label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #555;
+}
+
+
+
+/* ===== Logo Center ===== */
+.top-logo-box {
+    -fx-alignment: center;
+    -fx-spacing: 0;
+}
+
+.top-logo {
+    -fx-pref-width: 220px;
+    -fx-pref-height: 280px;
+}
+
+/* ===== Right Section ===== */
+
+
+/* ===== Transparent Background Card for Levels (The outer wrapper for the HBox) ===== */
+.level-tile-background {
+    /* 1. More Transparent Background */
+    -fx-background-color: rgba(255, 255, 255, 0.2); 
+    
+    /* CRITICAL FIX: Increased width to allow four 320px tiles + spacing */
+      -fx-pref-width: 1400px; 
+    -fx-pref-height: 700px;
+    
+    /* Round Corners */
+    -fx-background-radius: 15; 
+    
+    /* Reduced vertical padding to shrink overall height */
+   -fx-padding: 5 20 5 20; 
+    
+    /* Other properties you had: */
+    -fx-alignment: center; /* Center children */
+}
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+/* Ensure the content area inside the ScrollPane is transparent */
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+
+/* ===== Floating Yellow Level Tile ===== */
+.level-tile {
+    -fx-background-color: #F5F7CA; /* Yellow pastel */
+    -fx-background-radius: 20;
+    /* Increased bottom padding for space below button/banner */
+  -fx-padding: 3 10 18 10;
+      -fx-alignment: center;
+    -fx-pref-width: 420px;  /* CRITICAL FIX: Increased width to 320px */
+    -fx-pref-height: 200px; 
+    -fx-min-height: 200px;
+    -fx-min-width: 180px; /* Increased height to accommodate larger star/spacing */
+    -fx-spacing: 6px;
+    
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 6, 0, 0, 3);
+    /* -fx-transition property REMOVED as it is not valid JavaFX CSS */
+}
+
+.level-tile:hover {
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.level-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+
+.level-icon {
+    -fx-pref-width: 86px;
+    -fx-pref-height: 86px;
+    
+}
+
+.level-star {
+   -fx-pref-width: 380px; /* Increased to fill the 320px width tile */
+    -fx-pref-height: 200px;
+}
+
+.level-play-button {
+    -fx-font-size: 16px;
+    -fx-padding: 4 8;
+    -fx-background-radius: 16px;
+}
+
+.level-completed-banner {
+    -fx-font-size: 16px;
+    -fx-padding: 4 8;
+     -fx-text-fill: #4CAF50; /* A clean, recognizable green */
+    -fx-background-radius: 16px;
+}
+
+/* ===== Scroll Arrows ===== */
+.home-arrow-button {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-text-fill: #FF6B81;
+    -fx-font-size: 18px;
+    -fx-background-radius: 50%;
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
+    -fx-cursor: hand;
+}
+
+.home-arrow-button:hover {
+    -fx-background-color: rgba(255, 182, 193, 0.5);
+}
+
+/* ===== Home Button ===== */
+.game-home-button {
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+}
+
+
+/* ===== Transparent Card ===== */
+.game-center-card {
+    -fx-background-color: rgba(255, 255, 255, 0.12);
+    -fx-background-radius: 20;
+    -fx-padding: 30;
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 255, 255, 0.3), 10, 0, 0, 4);
+}
+
+/* ===== Guess Boxes ===== */
+.game-guess-box {
+    -fx-background-color: rgba(255, 255, 255, 0.18);
+    -fx-text-fill: white;
+    -fx-font-size: 22px;
+    -fx-min-width: 50px;
+    -fx-min-height: 50px;
+    -fx-alignment: center;
+    -fx-background-radius: 10;
+    -fx-border-color: rgba(255, 255, 255, 0.4);
+    -fx-border-radius: 10;
+}
+
+/* ===== Hint Button ===== */
+.game-hint-button {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-text-fill: #fff;
+    -fx-font-size: 14px;
+    -fx-padding: 8 16;
+    -fx-background-radius: 12;
+    -fx-cursor: hand;
+}
+
+.game-hint-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.35);
+}
+
+/* ===== Keyboard ===== */
+.game-key {
+    -fx-background-color: rgba(255, 255, 255, 0.15);
+    -fx-text-fill: #fff;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 10 14;
+    -fx-cursor: hand;
+}
+
+.game-key:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.35);
+}
+
+/* ===== Keyboard Area ===== */
+.keyboard-area {
+    -fx-alignment: center;
+}
+/* ======================================================
+   💖 SpellBeat — Mini Heart Game (HeartController)
+   ====================================================== */
+
+.miniheart-root {
+    -fx-background-color: linear-gradient(to bottom, #FFB3C1, #FFF3A5);
+    -fx-padding: 20px;
+}
+
+/* ===== Top Bar ===== */
+.miniheart-top-bar {
+    -fx-background-color: transparent;
+    -fx-alignment: center;
+    -fx-padding: 10 30;
+    -fx-spacing: 40;
+}
+
+.miniheart-top-left {
+    -fx-alignment: center-left;
+    -fx-spacing: 10;
+}
+
+.miniheart-chip {
+    -fx-background-color: #FDE5E8;
+    -fx-background-radius: 999px;
+    -fx-padding: 6 14;
+    -fx-alignment: center;
+    -fx-spacing: 6;
+}
+
+.miniheart-chip-label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #5A4642;
+    -fx-font-family: "Serif";
+}
+
+/* ===== Game Title ===== */
+.miniheart-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Serif";
+    -fx-text-fill: #2B1E1C;
+}
+
+/* ===== Center Game Box ===== */
+.miniheart-game-box {
+    -fx-background-color: linear-gradient(to bottom, #FFD3C1, #FFF3B8);
+    -fx-background-radius: 12;
+    -fx-pref-width: 900px;
+    -fx-pref-height: 350px;
+    -fx-alignment: center;
+    -fx-border-color: rgba(255, 255, 255, 0.5);
+    -fx-border-radius: 12;
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 182, 193, 0.5), 10, 0, 0, 4);
+}
+
+/* ===== Number Buttons ===== */
+.miniheart-number-btn {
+    -fx-background-color: #FF9ECD;
+    -fx-text-fill: #FFE59E;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+    -fx-padding: 10 16;
+    -fx-cursor: hand;
+}
+
+.miniheart-number-btn:hover {
+    -fx-background-color: #FF8ABC;
+}
+
+/* ===== Navigation Buttons (Back/Next) ===== */
+.miniheart-nav-btn {
+    -fx-background-color: #FFB3C1;
+    -fx-text-fill: #4A3C36;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 12;
+    -fx-padding: 8 30;
+    -fx-cursor: hand;
+}
+
+.miniheart-nav-btn:hover {
+    -fx-background-color: #FFA1B2;
+}
+
+/* ===== Heart Counter Chip ===== */
+.miniheart-heart-chip {
+    -fx-background-color: #FDE5E8;
+    -fx-background-radius: 999px;
+    -fx-alignment: center;
+    -fx-spacing: 6;
+    -fx-padding: 6 14;
+}
+
+
+/* ======================================= */
+/* ===== NEW: HomeLand Page Styles   ===== */
+/* ======================================= */
+/* ===============================
+   HOME LAND PAGE (Unique Styles)
+   =============================== */
+
+/* ===== Root Background ===== */
+.game-root-hl {
+    -fx-background-color: linear-gradient(to bottom, #FFB3C1, #FFF3A5);
+    -fx-padding: 20px;
+}
+
+/* ===== Top Bar ===== */
+.home-top-bar-hl {
+    -fx-background-color: transparent;
+    -fx-padding: 0 24px;
+    -fx-alignment: center;
+    -fx-spacing: 40px;
+    -fx-pref-height: 60px;
+}
+
+/* ===== Chips (Avatar, Heart, Level) ===== */
+.home-chip-hl {
+    -fx-background-color: #F5F7CA;
+    -fx-background-radius: 999px;
+    -fx-min-height: 40px;
+    -fx-max-height: 40px;
+    -fx-alignment: center;
+    -fx-spacing: 6px;
+    -fx-padding: 6 10;
+}
+
+.home-chip-hl.wide {
+    -fx-padding: 6 14;
+}
+
+.home-chip-label-hl {
+    -fx-font-weight: bold;
+    -fx-text-fill: #555;
+}
+
+/* ===== Home Button ===== */
+.home-button-hl {
+    -fx-background-color: #F5F7CA;
+    -fx-background-radius: 999px;
+    -fx-min-height: 40px;
+    -fx-max-height: 40px;
+    -fx-padding: 6 12;
+    -fx-cursor: hand;
+}
+
+.home-button-hl:hover {
+    -fx-background-color: #EAEFC7;
+}
+
+/* ===== Logout Button ===== */
+.logout-button-hl {
+    -fx-background-color: #FFE4E9;
+    -fx-text-fill: #333;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;
+    -fx-padding: 6 14;
+    -fx-cursor: hand;
+}
+
+.logout-button-hl:hover {
+    -fx-background-color: #FFCCD5;
+}
+
+/* ===== Game Selection Area ===== */
+.game-center-wrapper-hl {
+    -fx-alignment: center;
+    -fx-padding: 40 0;
+}
+
+.game-tile-hl {
+    -fx-background-color: rgba(255, 255, 255, 0.6);
+    -fx-background-radius: 20;
+    -fx-padding: 20;
+    -fx-pref-width: 260px;
+    -fx-pref-height: 260px;
+    -fx-alignment: center;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 8, 0, 0, 4);
+    -fx-spacing: 12px;
+}
+
+.game-tile-hl:hover {
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.game-tile-title-hl {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+
+.game-play-button-hl {
+    -fx-background-color: #FFB6C1;
+    -fx-text-fill: #333;
+    -fx-font-weight: bold;
+    -fx-background-radius: 12;
+    -fx-padding: 6 16;
+    -fx-cursor: hand;
+}
+
+.game-play-button-hl:hover {
+    -fx-background-color: #FFA8B6;
+}
+

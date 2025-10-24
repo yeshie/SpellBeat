@@ -2,22 +2,20 @@ package com.wordheartschallenge.app.controllers;
 
 import com.wordheartschallenge.app.models.User;
 import com.wordheartschallenge.app.services.AuthService;
-import com.wordheartschallenge.app.utils.SceneManager;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
 public class LoginController {
 
     public static Scene createScene() {
         HBox root = new HBox();
 
-        // Left Panel (Gradient + Logo)
+        // ===== Left Panel (Gradient + Logo) =====
         VBox leftPanel = new VBox();
         leftPanel.getStyleClass().add("left-panel");
         leftPanel.setPrefWidth(450);
@@ -28,7 +26,7 @@ public class LoginController {
         logo.setPreserveRatio(true);
         leftPanel.getChildren().add(logo);
 
-        // Right Panel (Login Form)
+        // ===== Right Panel (Login Form) =====
         VBox rightPanel = new VBox(15);
         rightPanel.getStyleClass().add("right-panel");
         rightPanel.setPrefWidth(450);
@@ -41,7 +39,7 @@ public class LoginController {
         Label title = new Label("Start your journey");
         title.getStyleClass().add("label-title");
 
-        Label subtitle = new Label("every word you spell keeps your beat alive!");
+        Label subtitle = new Label("Every word you spell keeps your beat alive!");
         subtitle.getStyleClass().add("label-subtitle");
 
         TextField userField = new TextField();
@@ -54,45 +52,58 @@ public class LoginController {
         loginButton.getStyleClass().add("primary-button");
         loginButton.setMaxWidth(Double.MAX_VALUE);
 
+        // ===== Registration Link =====
         HBox registrationBox = new HBox(5);
         registrationBox.setAlignment(Pos.CENTER);
         Label notRegisteredLabel = new Label("Not Registered Yet?");
         Label createAccountLink = new Label("Create an account");
         createAccountLink.getStyleClass().add("link-label");
-        createAccountLink.setOnMouseClicked(e -> SceneManager.switchScene(RegisterController.createScene()));
+        createAccountLink.setOnMouseClicked(e -> {
+            Stage stage = (Stage) createAccountLink.getScene().getWindow();
+            stage.setScene(RegisterController.createScene());
+        });
         registrationBox.getChildren().addAll(notRegisteredLabel, createAccountLink);
 
+        // Add components to formCard
         formCard.getChildren().addAll(title, subtitle, userField, passField, loginButton, registrationBox);
         rightPanel.getChildren().add(formCard);
 
         root.getChildren().addAll(leftPanel, rightPanel);
 
-        // Scene
+        // ===== Scene Setup =====
         Scene scene = new Scene(root, 900, 600);
         scene.getStylesheets().add(LoginController.class.getResource("/css/style.css").toExternalForm());
 
-        // Login Action
+        // ===== Login Action =====
         loginButton.setOnAction(e -> {
-            String email = userField.getText().trim();
+            String username = userField.getText().trim();
             String password = passField.getText().trim();
-            if (email.isEmpty() || password.isEmpty()) {
+
+            if (username.isEmpty() || password.isEmpty()) {
                 showAlert(Alert.AlertType.ERROR, "Please fill all fields!");
                 return;
             }
-            User user = AuthService.login(email, password);
+
+            User user = AuthService.login(username, password);
             if (user != null) {
                 showAlert(Alert.AlertType.INFORMATION, "Login successful! Welcome " + user.getName());
-                // TODO: Switch scene
+
+                // Navigate to HomeLandController
+                Stage stage = (Stage) loginButton.getScene().getWindow();
+                Scene homeScene = HomeLandController.createScene(user, stage);
+                stage.setScene(homeScene);
             } else {
-                showAlert(Alert.AlertType.ERROR, "Invalid email or password.");
+                showAlert(Alert.AlertType.ERROR, "Invalid username or password.");
             }
         });
 
         return scene;
     }
 
+    // ===== Helper Alert Method =====
     private static void showAlert(Alert.AlertType type, String text) {
-        Alert a = new Alert(type, text);
-        a.showAndWait();
+        Alert alert = new Alert(type, text);
+        alert.setHeaderText(null);
+        alert.showAndWait();
     }
 }

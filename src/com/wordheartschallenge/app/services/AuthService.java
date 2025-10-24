@@ -30,22 +30,19 @@ public class AuthService {
         }
     }
 
-    // Login user
-    public static User login(String email, String password) {
-        String sql = "SELECT * FROM users WHERE email=? AND password=?";
+    public static User login(String username, String password) {
+        String sql = "SELECT * FROM users WHERE username=? AND password=?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, email);
+            stmt.setString(1, username);
             stmt.setString(2, password);
 
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 User user = new User();
                 user.setId(rs.getInt("id"));
-                user.setName(rs.getString("name"));
-                user.setEmail(rs.getString("email"));
-                user.setAge(rs.getInt("age"));
+                user.setName(rs.getString("username")); // only username exists
                 return user;
             }
 
