@@ -1,6 +1,8 @@
 package com.wordheartschallenge.app.controllers;
 
 import com.wordheartschallenge.app.models.User;
+import com.wordheartschallenge.app.services.HeartAPIService;
+
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -66,19 +68,60 @@ public class HeartController {
         topBar.getChildren().addAll(leftBox, spacerLeft, title, spacerRight, heartChip);
         return topBar;
     }
+    private static HeartAPIService.HeartQuestion currentQuestion;
+
+    private static void loadNewPuzzle(ImageView puzzleView, Label feedback) {
+        feedback.setText("Loading puzzle...");
+        new Thread(() -> {
+            try {
+                currentQuestion = HeartAPIService.fetchQuestion();
+                javafx.application.Platform.runLater(() -> {
+                    puzzleView.setImage(new Image(currentQuestion.imageUrl, true));
+                    feedback.setText("How many hearts can you find?");
+                });
+            } catch (Exception e) {
+                javafx.application.Platform.runLater(() -> feedback.setText("Failed to load puzzle."));
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    private static void checkAnswer(int answer, ImageView puzzleView, Label feedback) {
+        if (currentQuestion == null) return;
+        if (answer == currentQuestion.solution) {
+            feedback.setText("✅ Correct! You found all the hearts!");
+            feedback.setStyle("-fx-text-fill: green;");
+        } else {
+            feedback.setText("❌ Try again!");
+            feedback.setStyle("-fx-text-fill: red;");
+        }
+    }
 
     private static VBox createGameArea(Stage stage) {
         VBox centerBox = new VBox(20);
         centerBox.setAlignment(Pos.CENTER);
 
-        VBox heartGameBox = new VBox();
+        VBox heartGameBox = new VBox(15);
+        heartGameBox.setAlignment(Pos.CENTER);
         heartGameBox.getStyleClass().add("miniheart-game-box");
+
+        ImageView puzzleView = new ImageView();
+        puzzleView.setFitWidth(300);
+        puzzleView.setPreserveRatio(true);
+
+        Label feedback = new Label("");
+        feedback.getStyleClass().add("miniheart-feedback");
+
+        // Load question
+        loadNewPuzzle(puzzleView, feedback);
 
         HBox numbersBox = new HBox(10);
         numbersBox.setAlignment(Pos.CENTER);
         for (int i = 0; i <= 9; i++) {
             Button numBtn = new Button(String.valueOf(i));
             numBtn.getStyleClass().add("miniheart-number-btn");
+            int answer = i;
+            numBtn.setOnAction(e -> checkAnswer(answer, puzzleView, feedback));
             numbersBox.getChildren().add(numBtn);
         }
 
@@ -88,11 +131,15 @@ public class HeartController {
         backBtn.getStyleClass().add("miniheart-nav-btn");
         Button nextBtn = new Button("Next");
         nextBtn.getStyleClass().add("miniheart-nav-btn");
+        nextBtn.setOnAction(e -> loadNewPuzzle(puzzleView, feedback));
 
         navBox.getChildren().addAll(backBtn, nextBtn);
+
+        heartGameBox.getChildren().addAll(puzzleView, feedback);
         centerBox.getChildren().addAll(heartGameBox, numbersBox, navBox);
         return centerBox;
     }
+
 
     private static ImageView createIconView(String path, double width, double height) {
         ImageView icon = new ImageView();
