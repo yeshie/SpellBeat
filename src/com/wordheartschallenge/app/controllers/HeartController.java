@@ -2,7 +2,7 @@ package com.wordheartschallenge.app.controllers;
 
 import com.wordheartschallenge.app.models.User;
 import com.wordheartschallenge.app.services.HeartAPIService;
-
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -11,16 +11,29 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import java.io.InputStream;
 
 public class HeartController {
 
+    private static HeartAPIService.HeartQuestion currentQuestion;
+    private static Label feedbackLabel;
+    private static int sessionEarned = 0; // track hearts earned in this mini-game
+    private static TopBarController topBarController;
+    private static User currentUser;
+    private static Stage currentStage;
+
     public static Scene createScene(User user, int hearts, Stage stage) {
+        currentUser = user;
+        currentStage = stage;
+        sessionEarned = 0;
+
         BorderPane root = new BorderPane();
         root.getStyleClass().add("miniheart-root");
 
-        root.setTop(createTopBar(user, hearts));
-        root.setCenter(createGameArea(stage));
+        // ✅ Use reusable TopBarController
+        topBarController = new TopBarController(user, stage);
+        root.setTop(topBarController.getView());
+
+        root.setCenter(createGameArea());
 
         Scene scene = new Scene(root, 1000, 650);
         scene.getStylesheets().add(HeartController.class.getResource("/css/style.css").toExternalForm());
@@ -29,75 +42,7 @@ public class HeartController {
         return scene;
     }
 
-    private static HBox createTopBar(User user, int hearts) {
-        HBox topBar = new HBox();
-        topBar.getStyleClass().add("miniheart-top-bar");
-
-        // Left: Avatar + Home Button
-        ImageView avatar = createIconView(user.getAvatarPath(), 34, 34);
-        Label name = new Label(user.getName());
-        name.getStyleClass().add("miniheart-chip-label");
-
-        HBox avatarChip = new HBox(avatar, name);
-        avatarChip.getStyleClass().add("miniheart-chip");
-
-        ImageView homeIcon = createIconView("/images/home.png", 32, 32);
-        Button homeButton = new Button("", homeIcon);
-        homeButton.getStyleClass().add("home-button");
-
-        HBox leftBox = new HBox(12, avatarChip, homeButton);
-        leftBox.getStyleClass().add("miniheart-top-left");
-
-        // Center Title
-        Label title = new Label("How Many Hearts Can You Find");
-        title.getStyleClass().add("miniheart-title");
-
-        // Right: Heart Counter
-        ImageView heartIcon = createIconView("/images/heartLogo.png", 28, 28);
-        Label heartLabel = new Label(String.valueOf(hearts));
-        heartLabel.getStyleClass().add("miniheart-chip-label");
-
-        HBox heartChip = new HBox(heartIcon, heartLabel);
-        heartChip.getStyleClass().add("miniheart-heart-chip");
-
-        Region spacerLeft = new Region();
-        Region spacerRight = new Region();
-        HBox.setHgrow(spacerLeft, Priority.ALWAYS);
-        HBox.setHgrow(spacerRight, Priority.ALWAYS);
-
-        topBar.getChildren().addAll(leftBox, spacerLeft, title, spacerRight, heartChip);
-        return topBar;
-    }
-    private static HeartAPIService.HeartQuestion currentQuestion;
-
-    private static void loadNewPuzzle(ImageView puzzleView, Label feedback) {
-        feedback.setText("Loading puzzle...");
-        new Thread(() -> {
-            try {
-                currentQuestion = HeartAPIService.fetchQuestion();
-                javafx.application.Platform.runLater(() -> {
-                    puzzleView.setImage(new Image(currentQuestion.imageUrl, true));
-                    feedback.setText("How many hearts can you find?");
-                });
-            } catch (Exception e) {
-                javafx.application.Platform.runLater(() -> feedback.setText("Failed to load puzzle."));
-                e.printStackTrace();
-            }
-        }).start();
-    }
-
-    private static void checkAnswer(int answer, ImageView puzzleView, Label feedback) {
-        if (currentQuestion == null) return;
-        if (answer == currentQuestion.solution) {
-            feedback.setText("✅ Correct! You found all the hearts!");
-            feedback.setStyle("-fx-text-fill: green;");
-        } else {
-            feedback.setText("❌ Try again!");
-            feedback.setStyle("-fx-text-fill: red;");
-        }
-    }
-
-    private static VBox createGameArea(Stage stage) {
+    private static VBox createGameArea() {
         VBox centerBox = new VBox(20);
         centerBox.setAlignment(Pos.CENTER);
 
@@ -109,48 +54,89 @@ public class HeartController {
         puzzleView.setFitWidth(300);
         puzzleView.setPreserveRatio(true);
 
-        Label feedback = new Label("");
-        feedback.getStyleClass().add("miniheart-feedback");
+        feedbackLabel = new Label("");
+        feedbackLabel.getStyleClass().add("miniheart-feedback");
 
-        // Load question
-        loadNewPuzzle(puzzleView, feedback);
+        loadNewPuzzle(puzzleView);
 
+        // Number buttons (0–9)
         HBox numbersBox = new HBox(10);
         numbersBox.setAlignment(Pos.CENTER);
         for (int i = 0; i <= 9; i++) {
             Button numBtn = new Button(String.valueOf(i));
             numBtn.getStyleClass().add("miniheart-number-btn");
             int answer = i;
-            numBtn.setOnAction(e -> checkAnswer(answer, puzzleView, feedback));
+            numBtn.setOnAction(e -> checkAnswer(answer, puzzleView));
             numbersBox.getChildren().add(numBtn);
         }
 
+        // Navigation (Back / Next)
         HBox navBox = new HBox(20);
         navBox.setAlignment(Pos.CENTER);
+
         Button backBtn = new Button("Back");
         backBtn.getStyleClass().add("miniheart-nav-btn");
+        backBtn.setOnAction(e -> {
+            // Return to GameController if came from there, else Home
+            if (currentUser.getLastScreen().equals("game")) {
+                Scene gameScene = GameController.createScene(currentUser, currentUser.getCurrentLevel());
+                currentStage.setScene(gameScene);
+            } else {
+                Scene homeland = HomeLandController.createScene(currentUser, currentStage);
+                currentStage.setScene(homeland);
+            }
+        });
+
+
         Button nextBtn = new Button("Next");
         nextBtn.getStyleClass().add("miniheart-nav-btn");
-        nextBtn.setOnAction(e -> loadNewPuzzle(puzzleView, feedback));
+        nextBtn.setOnAction(e -> loadNewPuzzle(puzzleView));
 
         navBox.getChildren().addAll(backBtn, nextBtn);
 
-        heartGameBox.getChildren().addAll(puzzleView, feedback);
+        heartGameBox.getChildren().addAll(puzzleView, feedbackLabel);
         centerBox.getChildren().addAll(heartGameBox, numbersBox, navBox);
         return centerBox;
     }
 
+    private static void loadNewPuzzle(ImageView puzzleView) {
+        feedbackLabel.setText("Loading puzzle...");
+        new Thread(() -> {
+            try {
+                currentQuestion = HeartAPIService.fetchQuestion();
+                Platform.runLater(() -> {
+                    puzzleView.setImage(new Image(currentQuestion.imageUrl, true));
+                    feedbackLabel.setText("How many hearts can you find?");
+                });
+            } catch (Exception e) {
+                Platform.runLater(() -> feedbackLabel.setText("Failed to load puzzle."));
+                e.printStackTrace();
+            }
+        }).start();
+    }
 
-    private static ImageView createIconView(String path, double width, double height) {
-        ImageView icon = new ImageView();
-        try (InputStream stream = HeartController.class.getResourceAsStream(path)) {
-            if (stream != null) icon.setImage(new Image(stream));
-        } catch (Exception e) {
-            e.printStackTrace();
+    private static void checkAnswer(int answer, ImageView puzzleView) {
+        if (currentQuestion == null) return;
+
+        if (answer == currentQuestion.solution) {
+            // ✅ +2 hearts immediately
+            int newTotal = currentUser.getHearts() + 2;
+            sessionEarned += 2;
+            topBarController.updateHearts(newTotal);
+            feedbackLabel.setText("✅ Correct! +2 Hearts (Total Earned: " + sessionEarned + "/10)");
+
+            // ✅ If user earned +10 in this session → go home
+            if (sessionEarned >= 10) {
+                feedbackLabel.setText("🎉 You earned +10 hearts! Returning to Home...");
+                Platform.runLater(() -> {
+                    Scene homeland = HomeLandController.createScene(currentUser, currentStage);
+                    currentStage.setScene(homeland);
+                });
+            } else {
+                loadNewPuzzle(puzzleView);
+            }
+        } else {
+            feedbackLabel.setText("❌ Wrong! Try again!");
         }
-        icon.setFitWidth(width);
-        icon.setFitHeight(height);
-        icon.setPreserveRatio(true);
-        return icon;
     }
 }

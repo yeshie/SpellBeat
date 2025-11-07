@@ -81,6 +81,11 @@
     -fx-text-fill: #BF6A5F;
     -fx-cursor: hand;
 }
+.remember-me-checkbox {
+    -fx-font-size: 14px;
+    -fx-font-family: "Serif";
+    -fx-text-fill: #59504B;
+}
 
 /* ===== HomeController UI Styles ===== */
 
@@ -173,6 +178,22 @@
     -fx-pref-width: 220px;
     -fx-pref-height: 280px;
 }
+/* ===== Always Visible Icon Scaling ===== */
+#homeIcon .image-view,
+#levelIcon {
+    -fx-scale-x: 1.0;
+    -fx-scale-y: 1.0;
+}
+
+/* ✅ Permanently scaled-up icons (visible always, not hover-based) */
+#logoIcon {
+    -fx-scale-x: 2.1;
+    -fx-scale-y: 2.1;
+}
+
+/* Optional hover highlight (kept simple) */
+
+
 
 /* ===== Right Section ===== */
 
@@ -216,7 +237,7 @@
     -fx-pref-width: 420px;  /* CRITICAL FIX: Increased width to 320px */
     -fx-pref-height: 200px; 
     -fx-min-height: 200px;
-    -fx-min-width: 180px; /* Increased height to accommodate larger star/spacing */
+    -fx-min-width: 120px; /* Increased height to accommodate larger star/spacing */
     -fx-spacing: 6px;
     
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 6, 0, 0, 3);
@@ -229,7 +250,7 @@
 }
 
 .level-title {
-    -fx-font-size: 20px;
+    -fx-font-size: 18px;
     -fx-font-weight: bold;
     -fx-text-fill: #333;
 }
@@ -300,16 +321,39 @@
     -fx-border-color: rgba(255, 255, 255, 0.4);
     -fx-border-radius: 10;
 }
+/* ===== Definition Box (Pastel Yellow Glass) ===== */
+.definition-box {
+    -fx-background-color: rgba(255, 250, 205, 0.35); /* soft pastel yellow glass */
+    -fx-background-radius: 15;
+    -fx-padding: 15;
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 255, 180, 0.4), 10, 0, 0, 4);
+    -fx-max-width: 650px;
+    -fx-alignment: center;
+    -fx-border-color: rgba(255, 240, 140, 0.6);
+    -fx-border-radius: 15;
+}
+
+/* ===== Definition Text ===== */
+.definition-label {
+    -fx-text-fill: #3e3e1f; /* dark yellowish text */
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-alignment: center;
+}
 
 /* ===== Hint Button ===== */
 .game-hint-button {
-    -fx-background-color: rgba(255, 255, 255, 0.23);
-    -fx-text-fill: #fff;
-    -fx-font-size: 16px;
-    -fx-padding: 8 16;
-    -fx-background-radius: 12;
-    -fx-cursor: hand;
+    -fx-background-color: linear-gradient(to bottom, #fff8dc, #ffea97);
+    -fx-background-radius: 10;
+    -fx-border-color: #b7950b;
+    -fx-border-radius: 10;
+    -fx-padding: 6 10;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-text-fill: #333;
+    -fx-alignment: center;
 }
+
 
 .game-hint-button:hover {
     -fx-background-color: rgba(255, 255, 255, 0.35);

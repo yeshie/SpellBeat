@@ -1,10 +1,13 @@
 package com.wordheartschallenge.app.utils;
 
 import javafx.scene.Scene;
+import org.scenicview.ScenicView;
+
 import javafx.stage.Stage;
 
 public class SceneManager {
     private static Stage primaryStage;
+   
 
     public static void setPrimaryStage(Stage stage) {
         primaryStage = stage;
@@ -14,6 +17,7 @@ public class SceneManager {
         if (primaryStage != null) {
             primaryStage.setScene(newScene);
             primaryStage.show();
+            ScenicView.show(newScene);
         } else {
             System.err.println("Error: Primary stage is not set!");
         }

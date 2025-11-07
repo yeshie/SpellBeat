@@ -1,6 +1,8 @@
 package com.wordheartschallenge.app.controllers;
 
 import com.wordheartschallenge.app.models.User;
+import com.wordheartschallenge.app.services.AuthService;
+import com.wordheartschallenge.app.utils.PasswordUtils;
 import com.wordheartschallenge.app.utils.SceneManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -10,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
 public class RegisterController {
 
@@ -64,7 +67,7 @@ public class RegisterController {
         nameField.setPromptText("Full Name");
 
         TextField ageField = new TextField();
-        ageField.setPromptText("Age"); // New age field
+        ageField.setPromptText("Age");
 
         PasswordField passwordField = new PasswordField();
         passwordField.setPromptText("Password");
@@ -85,8 +88,10 @@ public class RegisterController {
         loginLink.setOnMouseClicked(e -> SceneManager.switchScene(LoginController.createScene()));
         loginBox.getChildren().addAll(alreadyLabel, loginLink);
 
-        formCard.getChildren().addAll(title, subtitle, emailField, nameField, ageField,
-                passwordField, confirmField, createBtn, loginBox);
+        formCard.getChildren().addAll(
+                title, subtitle, emailField, nameField, ageField,
+                passwordField, confirmField, createBtn, loginBox
+        );
         rightPanel.getChildren().add(formCard);
 
         root.getChildren().addAll(leftPanel, rightPanel);
@@ -102,41 +107,62 @@ public class RegisterController {
             String password = passwordField.getText().trim();
             String confirm = confirmField.getText().trim();
 
-            if(email.isEmpty() || name.isEmpty() || ageText.isEmpty() || password.isEmpty() || confirm.isEmpty()) {
+            if (email.isEmpty() || name.isEmpty() || ageText.isEmpty() || password.isEmpty() || confirm.isEmpty()) {
                 showAlert(Alert.AlertType.ERROR, "Please fill all fields!");
+                return;
+            }
+
+            if (password.length() < 4) {
+                showAlert(Alert.AlertType.ERROR, "Password must be at least 4 characters long!");
                 return;
             }
 
             int age;
             try {
                 age = Integer.parseInt(ageText);
-            } catch(NumberFormatException ex) {
+            } catch (NumberFormatException ex) {
                 showAlert(Alert.AlertType.ERROR, "Please enter a valid age!");
                 return;
             }
 
-            if(!password.equals(confirm)) {
+            if (!password.equals(confirm)) {
                 showAlert(Alert.AlertType.ERROR, "Passwords do not match!");
                 return;
             }
 
-            // Create user and pass to PlayerProfile
+            // ✅ Encrypt password before saving
+            String encryptedPassword = PasswordUtils.encryptPassword(password);
+
+            // Create User
             User user = new User();
             user.setName(name);
             user.setEmail(email);
-            user.setPassword(password);
+            user.setPassword(encryptedPassword);
             user.setAge(age);
+            user.setHearts(10);
+            user.setCurrentLevel(1);
 
-            PlayerProfileController profileUI = new PlayerProfileController();
-            SceneManager.switchScene(profileUI.createScene(user));
+            // ✅ Save user to database
+            boolean success = com.wordheartschallenge.app.database.UserDAO.insertUser(user);
 
+            if (!success) {
+                showAlert(Alert.AlertType.ERROR, "Failed to create account. Try again!");
+                return;
+            }
+
+            // ✅ Move to Player Profile scene
+            SceneManager.switchScene(
+                    com.wordheartschallenge.app.controllers.PlayerProfileController.createScene(user)
+            );
         });
 
         return scene;
     }
 
+    // --- Show Alert Utility ---
     private static void showAlert(Alert.AlertType type, String text) {
         Alert a = new Alert(type, text);
+        a.setHeaderText(null);
         a.showAndWait();
     }
 }

@@ -1,4 +1,5 @@
 package com.wordheartschallenge.app.controllers;
+import com.wordheartschallenge.app.database.UserDAO;
 
 import com.wordheartschallenge.app.models.User;
 import javafx.geometry.Insets;
@@ -108,11 +109,21 @@ public class PlayerProfileController {
             String avatarPath = (String) selectedAvatar.getUserData();
             user.setName(username);
             user.setAvatarPath(avatarPath);
+            user.setHearts(10); // default
+            user.setCurrentLevel(1); // default
 
-            // Navigate to HomeController (defaults level=1, hearts=5)
+            boolean success = UserDAO.updateUserProfile(user);
+            if (!success) {
+                showAlert("Error", "Failed to save user profile.");
+                return;
+            }
+
+
+            // ✅ Successfully saved, go to Home
             Stage stage = (Stage) letsPlayButton.getScene().getWindow();
-            HomeController.createScene(user, 1, 5, stage);
+            HomeController.createScene(user, 1, 10, stage);
         });
+
 
         formCard.getChildren().addAll(title, usernameField, avatarLabel, avatarBox, letsPlayButton);
 

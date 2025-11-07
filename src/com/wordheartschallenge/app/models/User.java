@@ -7,14 +7,32 @@ public class User {
     private String password;
     private int age;
     private String avatarPath; // added for profile image
+    private int currentLevel;
+    private int hearts;
+    private String lastScreen; 
 
     public User() {}
 
-    public User(String name, String email, String password, int age) {
+    public User(String name, String email, String password, int age, String avatarPath, int currentLevel, int hearts) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.age = age;
+        this.avatarPath = avatarPath;
+        this.currentLevel = currentLevel;
+        this.hearts = hearts;
+        this.lastScreen=lastScreen;
+    }
+
+
+    // Getter
+    public String getLastScreen() {
+        return lastScreen;
+    }
+
+    // Setter
+    public void setLastScreen(String lastScreen) {
+        this.lastScreen = lastScreen;
     }
 
     // Getters & Setters
@@ -35,4 +53,9 @@ public class User {
 
     public String getAvatarPath() { return avatarPath; }
     public void setAvatarPath(String avatarPath) { this.avatarPath = avatarPath; }
+
+    public int getCurrentLevel() { return currentLevel; }
+    public int getHearts() { return hearts; }
+    public void setCurrentLevel(int currentLevel) { this.currentLevel = currentLevel; }
+    public void setHearts(int hearts) { this.hearts = hearts; }
 }

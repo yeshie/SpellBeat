@@ -3,52 +3,100 @@ package com.wordheartschallenge.app.services;
 import com.wordheartschallenge.app.database.DBConnection;
 import com.wordheartschallenge.app.models.User;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.sql.*;
+import java.util.Base64;
 
 public class AuthService {
 
-    // Register new user
-    public static boolean register(String name, String email, String password, int age) {
-        String sql = "INSERT INTO users(name, email, password, age) VALUES(?, ?, ?, ?)";
+    // ===== Utility: Encrypt password (SHA-256) =====
+    private static String encryptPassword(String password) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] encoded = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+            return Base64.getEncoder().encodeToString(encoded);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Error encrypting password", e);
+        }
+    }
+
+    // ===== Register new user (with encrypted password + email) =====
+    public static boolean register(String username, String email, String password, int age, String avatarPath) {
+        String sql = "INSERT INTO users (username, email, password, age, avatar_path, heart_points, current_level) " +
+                     "VALUES (?, ?, ?, ?, ?, 10, 1)";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, name);
+            stmt.setString(1, username);
             stmt.setString(2, email);
-            stmt.setString(3, password);
+            stmt.setString(3, encryptPassword(password)); // 🔒 store encrypted password
             stmt.setInt(4, age);
+            stmt.setString(5, avatarPath);
 
-            stmt.executeUpdate();
-            return true;
+            int rows = stmt.executeUpdate();
+            return rows > 0;
 
         } catch (SQLException e) {
-            System.out.println("Registration Error: " + e.getMessage());
+            System.out.println("❌ Registration Error: " + e.getMessage());
             return false;
         }
     }
 
+    // ===== Login existing user (compare encrypted passwords) =====
     public static User login(String username, String password) {
+        String encryptedPassword = encryptPassword(password); // 🔒 encrypt before checking
         String sql = "SELECT * FROM users WHERE username=? AND password=?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, username);
-            stmt.setString(2, password);
+            stmt.setString(2, encryptedPassword);
 
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 User user = new User();
                 user.setId(rs.getInt("id"));
-                user.setName(rs.getString("username")); // only username exists
+                user.setName(rs.getString("username"));
+                user.setEmail(rs.getString("email"));
+                user.setPassword(rs.getString("password"));
+                user.setAge(rs.getInt("age"));
+                user.setAvatarPath(rs.getString("avatar_path"));
+                user.setHearts(rs.getInt("heart_points"));
+                user.setCurrentLevel(rs.getInt("current_level"));
                 return user;
             }
 
         } catch (SQLException e) {
-            System.out.println("Login Error: " + e.getMessage());
+            System.out.println("❌ Login Error: " + e.getMessage());
         }
         return null;
+    }
+
+    // ===== Update heart points dynamically =====
+    public static void updateHeartPoints(int userId, int newHearts) {
+        String sql = "UPDATE users SET heart_points = ? WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, newHearts);
+            stmt.setInt(2, userId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("❌ Error updating heart points: " + e.getMessage());
+        }
+    }
+
+    // ===== Update user level =====
+    public static void updateCurrentLevel(int userId, int newLevel) {
+        String sql = "UPDATE users SET current_level = ? WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, newLevel);
+            stmt.setInt(2, userId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("❌ Error updating level: " + e.getMessage());
+        }
     }
 }
