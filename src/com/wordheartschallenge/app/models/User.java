@@ -10,6 +10,8 @@ public class User {
     private int currentLevel;
     private int hearts;
     private String lastScreen; 
+    private boolean tutorialCompleted;
+
 
     public User() {}
 
@@ -58,4 +60,8 @@ public class User {
     public int getHearts() { return hearts; }
     public void setCurrentLevel(int currentLevel) { this.currentLevel = currentLevel; }
     public void setHearts(int hearts) { this.hearts = hearts; }
+    
+    public boolean isTutorialCompleted() { return tutorialCompleted; }
+    public void setTutorialCompleted(boolean completed) { this.tutorialCompleted = completed; }
+
 }

@@ -43,14 +43,14 @@
 }
 
 /* ===== Subtitles and Labels ===== */
-.label-subtitle, .profile-label, .game-info-label {
+.label-subtitle, .game-info-label {
     -fx-font-size: 16px;
     -fx-font-family: "Serif";
     -fx-text-fill: #59504B;
 }
 
 /* ===== Input Fields ===== */
-.text-field, .password-field, .profile-textfield {
+.text-field, .password-field {
     -fx-pref-width: 300px;
     -fx-pref-height: 40px;
     -fx-background-radius: 10px;
@@ -61,7 +61,7 @@
 }
 
 /* ===== Buttons ===== */
-.primary-button, .profile-button, .level-play-button, .game-play-button {
+.primary-button,.level-play-button, .game-play-button {
     -fx-background-color: #ED8990;
     -fx-text-fill: white;
     -fx-font-weight: bold;
@@ -211,7 +211,7 @@
     -fx-background-radius: 15; 
     
     /* Reduced vertical padding to shrink overall height */
-   -fx-padding: 5 20 5 20; 
+   -fx-padding: 0 20 0 20; 
     
     /* Other properties you had: */
     -fx-alignment: center; /* Center children */
@@ -219,6 +219,8 @@
 .scroll-pane {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
+     -fx-pref-height: 400px; /* ✅ Reduced height for compactness (adjust as needed, e.g., 250-300px) */
+    -fx-max-height: 400px; /* ✅ Prevent it from growing taller */
 }
 
 /* Ensure the content area inside the ScrollPane is transparent */
@@ -228,26 +230,27 @@
 
 
 /* ===== Floating Yellow Level Tile ===== */
+/* ===== Floating Yellow Level Tile ===== */
 .level-tile {
     -fx-background-color: #F5F7CA; /* Yellow pastel */
     -fx-background-radius: 20;
-    /* Increased bottom padding for space below button/banner */
-  -fx-padding: 3 10 18 10;
-      -fx-alignment: center;
-    -fx-pref-width: 420px;  /* CRITICAL FIX: Increased width to 320px */
-    -fx-pref-height: 200px; 
-    -fx-min-height: 200px;
-    -fx-min-width: 120px; /* Increased height to accommodate larger star/spacing */
-    -fx-spacing: 6px;
-    
+    -fx-padding: 3 10 18 10;
+    -fx-alignment: center;
+    -fx-pref-width: 420px;
+    -fx-pref-height: 200px; /* ✅ Increased height for prominence */
+    -fx-min-height: 280px;
+    -fx-min-width: 160px;
+    -fx-spacing: 8px;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 6, 0, 0, 3);
-    /* -fx-transition property REMOVED as it is not valid JavaFX CSS */
 }
 
 .level-tile:hover {
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
 }
+
+
+
 
 .level-title {
     -fx-font-size: 18px;
@@ -538,10 +541,12 @@
 
 /* ===== Logout Button ===== */
 .logout-button-hl {
-    -fx-background-color: #FFE4E9;
-    -fx-text-fill: #333;
+    -fx-background-color: #F5F7CA;
+    -fx-text-fill: #C01358;
     -fx-font-weight: bold;
     -fx-background-radius: 20;
+     -fx-min-height: 40px;
+    -fx-max-height: 40px;
     -fx-padding: 6 14;
     -fx-cursor: hand;
 }
@@ -591,3 +596,75 @@
     -fx-background-color: #FFA8B6;
 }
 
+.profile-root {
+    -fx-background-color: linear-gradient(to bottom right, #FF8BBB, #FFF174);
+}
+
+.profile-card {
+    -fx-background-color: rgba(255, 255, 255, 0.9);
+    -fx-background-radius: 20px;
+    -fx-padding: 30 30 15 30;   /* top right bottom left (reduced bottom from 30 → 15) */
+    -fx-spacing: 12px;          /* slightly tighter spacing between children */
+    -fx-alignment: center;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 3);
+    -fx-max-width: 450px;
+}
+
+
+.profile-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Serif";
+    -fx-text-fill: #59504B;
+    -fx-padding: 0 0 10 0;
+}
+
+.profile-label {
+    -fx-font-size: 15px;
+    -fx-text-fill: #59504B;
+    -fx-font-family: "Serif";
+        -fx-alignment: center-left;
+    
+}
+.profile-textfield {
+    -fx-pref-width: 260px;     /* slight width */
+    -fx-min-height: 35px;      /* ensures taller height */
+    -fx-pref-height: 45px;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-border-color: #C3CFE2;
+    -fx-border-width: 1.5px;
+    -fx-padding: 0 15 0 15;
+    -fx-font-size: 16px;
+    -fx-font-family: "Serif";
+}
+
+
+.profile-button {
+    -fx-background-color: #ED8990;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+    -fx-background-radius: 10px;
+    -fx-padding: 10 20 10 20;
+    -fx-cursor: hand;
+}
+.profile-button:hover {
+    -fx-background-color: #d47a80;
+}
+
+.avatar-button {
+    -fx-background-color: transparent;
+    -fx-border-radius: 10px;
+    -fx-padding: 5;
+}
+.avatar-button:selected {
+    -fx-border-color: #ED8990;
+    -fx-border-width: 3px;
+    -fx-background-radius: 10px;
+}
+
+.profile-message {
+    -fx-font-size: 14px;
+    -fx-padding: 8 0 0 0;
+}

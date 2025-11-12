@@ -1,142 +1,113 @@
 package com.wordheartschallenge.app.controllers;
 
 import com.wordheartschallenge.app.models.User;
-import javafx.geometry.Pos;
+import com.wordheartschallenge.app.services.HomeLogic;
+import com.wordheartschallenge.app.ui.HomeUI;
+import com.wordheartschallenge.app.database.UserProgressDAO;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.io.InputStream;
+import java.util.Set;
+import java.util.HashSet;
 
 public class HomeController {
 
-    public static Scene createScene(User user, int level, int hearts, Stage stage) {
-        BorderPane root = new BorderPane();
+    public static Scene createScene(User user, Stage stage) {
+        int startLevel = HomeLogic.getStartLevel(user);
+        int hearts = HomeLogic.getStartHearts(user);
+
+        return createScene(user, startLevel, hearts, stage);
+    }
+
+    public static Scene createScene(User user, int startLevel, int hearts, Stage stage) {
+        HomeUI homeUI = new HomeUI();
+        VBox[] levelTiles = new VBox[12];
+
+        // Load completed levels from DB
+        Set<Integer> completedLevels = new HashSet<>();
+        for (int i = 1; i <= 12; i++) {
+            if (UserProgressDAO.isLevelCompleted(user.getId(), i)) {
+                completedLevels.add(i);
+            }
+        }
+
+        // Determine next playable level
+        int nextLevel = 1;
+        for (int i = 1; i <= 12; i++) {
+            if (!completedLevels.contains(i)) {
+                nextLevel = i;
+                break;
+            }
+        }
+
+        // Build level tiles
+        for (int i = 1; i <= 12; i++) {
+            boolean completed = completedLevels.contains(i);
+            boolean playable = (i == nextLevel);
+            boolean locked = (!completed && !playable);
+
+            String levelText = "Level " + String.format("%02d", i);
+
+            // Trophy icon
+            ImageView trophyIcon = homeUI.createIconView("/images/level.png", 50, 50);
+            trophyIcon.setScaleX(1.6);
+            trophyIcon.setScaleY(1.6);
+
+            // Star icon → only show if completed
+            HBox starsBox = new HBox(0);
+            if (completed) {
+                ImageView starIcon = homeUI.createIconView("/images/star.png", 50, 40);
+                starIcon.setScaleX(2.5);
+                starIcon.setScaleY(2.5);
+                starsBox = homeUI.createStarsBox(starIcon);
+            }
+
+            // Bottom node
+            Node bottom;
+            if (completed) {
+                bottom = new javafx.scene.control.Label("Completed");
+                bottom.getStyleClass().add("level-completed-banner");
+            } else if (playable) {
+                Button playButton = new Button("Let's Play!");
+                playButton.getStyleClass().add("level-play-button");
+                HomeLogic.setupPlayButton(playButton, user, i, stage);
+                bottom = playButton;
+            } else { // locked
+                ImageView lockIcon = homeUI.createIconView("/images/lock.png", 40, 40);
+                lockIcon.setScaleX(2.5); // scale X
+                lockIcon.setScaleY(2.5); // scale Y
+                bottom = lockIcon;
+            }
+
+            // Create level tile
+            levelTiles[i - 1] = homeUI.createLevelTile(levelText, bottom, trophyIcon, starsBox);
+        }
+
+        // Scrollable level area
+        Node levelSelectArea = homeUI.createLevelSelectArea((Node[]) levelTiles);
+
+        // Build root BorderPane
+        javafx.scene.layout.BorderPane root = new javafx.scene.layout.BorderPane();
         root.getStyleClass().add("game-root");
 
-        // ✅ Use TopBarController instead of createTopBar()
+        // Top bar
         TopBarController topBar = new TopBarController(user, stage);
         root.setTop(topBar.getView());
 
-        // ✅ Level selection area
-        root.setCenter(createLevelSelectArea(user, stage));
+        // Center
+        root.setCenter(levelSelectArea);
 
-        Scene scene = new Scene(root, 900, 600);
+        // Scene
+        Scene scene = new Scene(root, 1000, 650);
         scene.getStylesheets().add(HomeController.class.getResource("/css/style.css").toExternalForm());
-
         stage.setScene(scene);
         stage.show();
+
         return scene;
-    }
-
-    // Updated to accept User and Stage
-    private static Node createLevelSelectArea(User user, Stage stage) {
-        VBox backgroundCard = new VBox();
-        backgroundCard.getStyleClass().add("level-tile-background");
-        backgroundCard.setAlignment(Pos.CENTER);
-
-        HBox levelContainer = new HBox(30);
-        levelContainer.setAlignment(Pos.CENTER);
-
-        for (int i = 1; i <= 12; i++) {
-            boolean completed = i <= 3;
-            boolean playable = i == 4;
-            levelContainer.getChildren().add(createLevelTile(user, stage, i, completed, playable));
-        }
-
-        backgroundCard.getChildren().add(levelContainer);
-
-        ScrollPane scrollPane = new ScrollPane(backgroundCard);
-        scrollPane.setFitToHeight(true);
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollPane.setPannable(true);
-        scrollPane.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
-
-        Button leftArrow = new Button("<");
-        leftArrow.getStyleClass().add("home-arrow-button");
-        leftArrow.setOnAction(e -> scrollPane.setHvalue(Math.max(scrollPane.getHvalue() - 0.25, 0)));
-
-        Button rightArrow = new Button(">");
-        rightArrow.getStyleClass().add("home-arrow-button");
-        rightArrow.setOnAction(e -> scrollPane.setHvalue(Math.min(scrollPane.getHvalue() + 0.25, 1)));
-
-        HBox wrapper = new HBox(10, leftArrow, scrollPane, rightArrow);
-        wrapper.setAlignment(Pos.CENTER);
-        wrapper.getStyleClass().add("level-scroll-wrapper");
-        return wrapper;
-    }
-
-    private static VBox createLevelTile(User user, Stage stage, int levelNum, boolean completed, boolean playable) {
-        VBox tile = new VBox(12);
-        tile.setAlignment(Pos.CENTER);
-        tile.getStyleClass().add("level-tile");
-
-        Label title = new Label("Level " + String.format("%02d", levelNum));
-        title.getStyleClass().add("level-title");
-
-        ImageView trophyIcon = createIconView("/images/level.png", 50, 50);
-        trophyIcon.getStyleClass().add("level-icon");
-
-        StackPane trophyWrapper = new StackPane(trophyIcon);
-        trophyWrapper.setPrefSize(60, 60);
-        trophyWrapper.setAlignment(Pos.CENTER);
-
-        trophyIcon.setScaleX(1.6);
-        trophyIcon.setScaleY(1.6);
-
-        HBox starsBox = new HBox(6);
-        starsBox.setAlignment(Pos.CENTER);
-
-        ImageView star = createIconView("/images/star.png", 50, 40);
-        star.getStyleClass().add("level-star");
-
-        StackPane starWrapper = new StackPane(star);
-        starWrapper.setPrefSize(60, 50);
-        starWrapper.setAlignment(Pos.CENTER);
-
-        star.setScaleX(2.5);
-        star.setScaleY(2.5);
-
-        starsBox.getChildren().add(starWrapper);
-
-        Node bottom;
-        if (completed) {
-            Label completedLabel = new Label("Completed");
-            completedLabel.getStyleClass().add("level-completed-banner");
-            bottom = completedLabel;
-        } else if (playable) {
-            Button playButton = new Button("Let's Play!");
-            playButton.getStyleClass().add("level-play-button");
-
-            playButton.setOnAction(e -> {
-                Scene gameScene = GameController.createScene(user, levelNum);
-                stage.setScene(gameScene);
-            });
-            bottom = playButton;
-        } else {
-            bottom = new Region();
-            ((Region) bottom).setMinHeight(20);
-        }
-
-        tile.getChildren().addAll(title, trophyWrapper, starsBox, bottom);
-        return tile;
-    }
-
-    private static ImageView createIconView(String path, double width, double height) {
-        ImageView icon = new ImageView();
-        try (InputStream stream = HomeController.class.getResourceAsStream(path)) {
-            if (stream != null) icon.setImage(new Image(stream));
-        } catch (Exception e) { e.printStackTrace(); }
-        icon.setFitWidth(width);
-        icon.setFitHeight(height);
-        icon.setPreserveRatio(true);
-        return icon;
     }
 }

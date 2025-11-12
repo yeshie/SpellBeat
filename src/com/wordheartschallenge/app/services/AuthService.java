@@ -99,4 +99,47 @@ public class AuthService {
             System.out.println("❌ Error updating level: " + e.getMessage());
         }
     }
+    
+ // ===== Update username =====
+    public static boolean updateUsername(int userId, String newName) {
+        String sql = "UPDATE users SET username = ? WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, newName);
+            stmt.setInt(2, userId);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("❌ Error updating username: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // ===== Update password =====
+    public static boolean updatePassword(int userId, String newPassword) {
+        String sql = "UPDATE users SET password = ? WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, encryptPassword(newPassword));
+            stmt.setInt(2, userId);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("❌ Error updating password: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // ===== Update avatar =====
+    public static boolean updateAvatar(int userId, String avatarPath) {
+        String sql = "UPDATE users SET avatar_path = ? WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, avatarPath);
+            stmt.setInt(2, userId);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("❌ Error updating avatar: " + e.getMessage());
+            return false;
+        }
+    }
+
 }

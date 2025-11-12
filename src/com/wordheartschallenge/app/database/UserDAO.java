@@ -27,16 +27,15 @@ public class UserDAO {
             if (rows > 0) {
                 ResultSet rs = stmt.getGeneratedKeys();
                 if (rs.next()) {
-                    user.setId(rs.getInt(1)); // store the new ID for later
+                    user.setId(rs.getInt(1));
                 }
                 return true;
             }
-            return false;
 
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         }
+        return false;
     }
 
     /** ✅ Update username + avatar (on Player Profile) */
@@ -50,9 +49,49 @@ public class UserDAO {
             stmt.setString(2, user.getAvatarPath());
             stmt.setInt(3, user.getId());
 
-            int rows = stmt.executeUpdate();
-            return rows > 0;
+            return stmt.executeUpdate() > 0;
 
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /** ✅ Get user by username + password (for login) */
+    public static User getUserByCredentials(String username, String password) {
+        String sql = "SELECT id, username, email, heart_points, current_level FROM users WHERE username = ? AND password = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, username);
+            stmt.setString(2, password);
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                // 👇 Only load what’s needed after login
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setName(rs.getString("username"));
+                user.setEmail(rs.getString("email"));
+                user.setHearts(rs.getInt("heart_points"));
+                user.setAvatarPath(rs.getString("avatar_path")); // ✅ add this
+                user.setCurrentLevel(rs.getInt("current_level"));
+                return user;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public static boolean updateUserTutorial(User user) {
+        String sql = "UPDATE users SET tutorial_completed = ? WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setBoolean(1, user.isTutorialCompleted());
+            stmt.setInt(2, user.getId());
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
