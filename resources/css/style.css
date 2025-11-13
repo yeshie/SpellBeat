@@ -172,6 +172,7 @@
 .top-logo-box {
     -fx-alignment: center;
     -fx-spacing: 0;
+    -fx-padding: 30 0 0 0;
 }
 
 .top-logo {
@@ -181,14 +182,15 @@
 /* ===== Always Visible Icon Scaling ===== */
 #homeIcon .image-view,
 #levelIcon {
-    -fx-scale-x: 1.0;
-    -fx-scale-y: 1.0;
+    -fx-scale-x: 1.5;
+    -fx-scale-y: 1.5;
 }
 
 /* ✅ Permanently scaled-up icons (visible always, not hover-based) */
 #logoIcon {
-    -fx-scale-x: 2.1;
-    -fx-scale-y: 2.1;
+    -fx-scale-x: 2.5;
+    -fx-scale-y: 2.5;
+    -fx-translate-y: 20; 
 }
 
 /* Optional hover highlight (kept simple) */

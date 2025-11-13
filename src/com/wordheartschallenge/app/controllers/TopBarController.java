@@ -70,6 +70,7 @@ public class TopBarController {
         HBox levelChip = createInfoChip("/images/level.png", levelLabel.getText(), false);
         ((ImageView) levelChip.getChildren().get(0)).setId("levelIcon");
         levelChip.getChildren().set(1, levelLabel);
+        
 
         Button logoutButton = new Button("Logout");
         logoutButton.getStyleClass().add("logout-button-hl");
