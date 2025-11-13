@@ -110,8 +110,8 @@ public class GameController {
             user.setHearts(newHearts);
             UserProgressDAO.updateHearts(user.getId(), newHearts);
 
-            // ✅ Navigate back to HomeController to show updated tiles
-            HomeController.createScene(user, currentStage);
+            // ✅ Navigate to WinningController instead of HomeController
+            WinningController.createScene(user, level, newHearts, currentStage);
 
         } else {
             gameEngine.resetGuessBoxes();  
