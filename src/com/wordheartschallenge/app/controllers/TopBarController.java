@@ -31,6 +31,8 @@ public class TopBarController {
         this.levelLabel = new Label("Level " + user.getCurrentLevel());
     }
 
+ // Add these ID setters to your TopBarController getView() method
+
     public Node getView() {
         HBox topBar = new HBox();
         topBar.getStyleClass().add("home-top-bar-hl");
@@ -39,15 +41,15 @@ public class TopBarController {
 
         // LEFT: Avatar + Home button
         HBox avatarChip = createInfoChip(ensureLeadingSlash(user.getAvatarPath()), user.getName(), true);
+        avatarChip.setId("avatar-chip"); // ✅ Add ID for tour
         avatarChip.setOnMouseClicked(e -> {
             Scene profileScene = ProfileController.createScene(user, stage, this);
             stage.setScene(profileScene);
         });
-        avatarIcon = (ImageView) avatarChip.getChildren().get(0); // Store reference
-        System.out.println("DEBUG: TopBar avatarIcon set for path: " + user.getAvatarPath()); // DEBUG
+        avatarIcon = (ImageView) avatarChip.getChildren().get(0);
 
         Button homeButton = createIconButton("/images/home.png");
-        homeButton.setId("homeIcon");
+        homeButton.setId("home-button"); // ✅ Add ID for tour
         homeButton.setOnAction(e -> {
             Scene homelandScene = HomeLandController.createScene(user, stage);
             stage.setScene(homelandScene);
@@ -64,13 +66,14 @@ public class TopBarController {
 
         // RIGHT: Hearts, Level, Logout
         HBox heartsChip = createInfoChip("/images/heartLogo.png", heartsLabel.getText(), false);
+        heartsChip.setId("hearts-chip"); // ✅ Add ID for tour
         ((ImageView) heartsChip.getChildren().get(0)).setId("heartIcon");
         heartsChip.getChildren().set(1, heartsLabel);
 
         HBox levelChip = createInfoChip("/images/level.png", levelLabel.getText(), false);
+        levelChip.setId("level-chip"); // ✅ Add ID for tour
         ((ImageView) levelChip.getChildren().get(0)).setId("levelIcon");
         levelChip.getChildren().set(1, levelLabel);
-        
 
         Button logoutButton = new Button("Logout");
         logoutButton.getStyleClass().add("logout-button-hl");

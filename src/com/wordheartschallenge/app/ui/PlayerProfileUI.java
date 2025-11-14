@@ -94,7 +94,7 @@ public class PlayerProfileUI {
         StackPane root = new StackPane(backgroundLayer, formCard);
         root.setAlignment(Pos.CENTER);
 
-        this.scene = new Scene(root, 900, 600);
+        this.scene = new Scene(root, 1000, 650);
         this.scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
     }
 

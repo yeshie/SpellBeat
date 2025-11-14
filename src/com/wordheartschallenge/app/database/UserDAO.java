@@ -77,6 +77,7 @@ public class UserDAO {
                 user.setHearts(rs.getInt("heart_points"));
                 user.setAvatarPath(rs.getString("avatar_path")); // ✅ add this
                 user.setCurrentLevel(rs.getInt("current_level"));
+                user.setTutorialCompleted(rs.getBoolean("tutorial_completed"));
                 return user;
             }
 

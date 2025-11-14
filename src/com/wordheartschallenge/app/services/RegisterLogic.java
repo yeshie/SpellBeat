@@ -1,38 +1,57 @@
 package com.wordheartschallenge.app.services;
 
-
 import com.wordheartschallenge.app.models.User;
 import com.wordheartschallenge.app.utils.PasswordUtils;
+import com.wordheartschallenge.app.utils.AlertUtil;
 import com.wordheartschallenge.app.database.UserDAO;
-
-import javafx.scene.control.Alert;
 
 public class RegisterLogic {
 
     public static User createUser(String email, String name, String ageText, String password, String confirm) {
+        
+        // 1. Check if all fields are filled
         if (email.isEmpty() || name.isEmpty() || ageText.isEmpty() || password.isEmpty() || confirm.isEmpty()) {
-            showAlert(Alert.AlertType.ERROR, "Please fill all fields!");
+            AlertUtil.showEmptyFieldsError();
             return null;
         }
 
+        // 2. Email Validation
+        if (!isValidEmail(email)) {
+            AlertUtil.showEmailError();
+            return null;
+        }
+
+        // 3. Name Validation (letters and spaces only)
+        if (!name.matches("^[a-zA-Z\\s]+$")) {
+            AlertUtil.showNameError();
+            return null;
+        }
+
+        // 4. Age Validation (exactly 2 digits, 10-99)
+        if (!ageText.matches("^\\d{2}$")) {
+            AlertUtil.showAgeError();
+            return null;
+        }
+        
+        int age = Integer.parseInt(ageText);
+        if (age < 10 || age > 99) {
+            AlertUtil.showAgeError();
+            return null;
+        }
+
+        // 5. Password Validation (at least 4 characters)
         if (password.length() < 4) {
-            showAlert(Alert.AlertType.ERROR, "Password must be at least 4 characters long!");
+            AlertUtil.showPasswordError();
             return null;
         }
 
-        int age;
-        try {
-            age = Integer.parseInt(ageText);
-        } catch (NumberFormatException ex) {
-            showAlert(Alert.AlertType.ERROR, "Please enter a valid age!");
-            return null;
-        }
-
+        // 6. Confirm Password Validation
         if (!password.equals(confirm)) {
-            showAlert(Alert.AlertType.ERROR, "Passwords do not match!");
+            AlertUtil.showPasswordMismatchError();
             return null;
         }
 
+        // All validation passed - create user
         String encryptedPassword = PasswordUtils.encryptPassword(password);
 
         User user = new User();
@@ -45,17 +64,16 @@ public class RegisterLogic {
 
         boolean success = UserDAO.insertUser(user);
         if (!success) {
-            showAlert(Alert.AlertType.ERROR, "Failed to create account. Try again!");
+            AlertUtil.showAccountExistsError();
             return null;
         }
 
         return user;
     }
 
-    private static void showAlert(Alert.AlertType type, String text) {
-        Alert alert = new Alert(type, text);
-        alert.setHeaderText(null);
-        alert.showAndWait();
+    private static boolean isValidEmail(String email) {
+        // Simple email validation regex
+        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+        return email.matches(emailRegex);
     }
 }
-

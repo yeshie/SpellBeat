@@ -7,7 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class PlayerProfileController {
-
+    
     private Scene scene;
 
     public static Scene createScene(User user) {
@@ -17,10 +17,11 @@ public class PlayerProfileController {
 
     private Scene buildScene(User user) {
         PlayerProfileUI ui = new PlayerProfileUI(user);
-        PlayerProfileLogic logic = new PlayerProfileLogic(user, ui); // pass UI reference to logic
-
-        ui.setOnLetsPlay(() -> logic.handleLetsPlay()); // use lambda with no null
-
+        PlayerProfileLogic logic = new PlayerProfileLogic(user, ui);
+        
+        // Set the "Let's Play" button action
+        ui.setOnLetsPlay(() -> logic.handleLetsPlay());
+        
         this.scene = ui.getScene();
         return scene;
     }

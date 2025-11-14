@@ -16,15 +16,21 @@ public class RegisterUI {
     private VBox rightPanel;
     private VBox formCard;
 
-    // Expose input fields and button to Logic/Controller
+    // Input fields
     private TextField emailField;
     private TextField nameField;
     private TextField ageField;
     private PasswordField passwordField;
     private PasswordField confirmField;
     private Button createBtn;
-    private Label loginLink; 
+    private Label loginLink;
 
+    // Validation labels (inline feedback)
+    private Label emailError;
+    private Label nameError;
+    private Label ageError;
+    private Label passwordError;
+    private Label confirmError;
 
     public RegisterUI() {
         buildUI();
@@ -64,8 +70,8 @@ public class RegisterUI {
         rightPanel.setPrefWidth(500);
         rightPanel.setAlignment(Pos.TOP_CENTER);
 
-        formCard = new VBox(15);
-        formCard.getStyleClass().add("form-card");
+        formCard = new VBox(12);
+        formCard.getStyleClass().add("Rform-card");
         formCard.setAlignment(Pos.CENTER);
 
         Label title = new Label("Create an account");
@@ -74,42 +80,68 @@ public class RegisterUI {
         Label subtitle = new Label("Join SpellBeat and keep your beat alive!");
         subtitle.getStyleClass().add("label-subtitle");
 
+        // Email Field + Error Label
         emailField = new TextField();
         emailField.setPromptText("Email Address");
+        emailField.getStyleClass().add("register-text-field");
+        emailError = createErrorLabel();
 
+        // Name Field + Error Label
         nameField = new TextField();
         nameField.setPromptText("Full Name");
+        nameField.getStyleClass().add("register-text-field");
+        nameError = createErrorLabel();
 
+        // Age Field + Error Label
         ageField = new TextField();
         ageField.setPromptText("Age");
+        ageField.getStyleClass().add("register-text-field");
+        ageError = createErrorLabel();
 
+        // Password Field + Error Label
         passwordField = new PasswordField();
         passwordField.setPromptText("Password");
+        passwordField.getStyleClass().add("register-text-field");
+        passwordError = createErrorLabel();
 
+        // Confirm Password Field + Error Label
         confirmField = new PasswordField();
         confirmField.setPromptText("Confirm Password");
+        confirmField.getStyleClass().add("register-text-field");
+        confirmError = createErrorLabel();
 
         createBtn = new Button("Create an account");
         createBtn.getStyleClass().add("primary-button");
         createBtn.setMaxWidth(Double.MAX_VALUE);
 
-   
-     // Login Link
+        // Login Link
         HBox loginBox = new HBox(5);
         loginBox.setAlignment(Pos.CENTER);
         Label alreadyLabel = new Label("Already have an account?");
-        loginLink = new Label("Login"); // assign to the field
+        loginLink = new Label("Login");
         loginLink.getStyleClass().add("link-label");
         loginBox.getChildren().addAll(alreadyLabel, loginLink);
 
-
         formCard.getChildren().addAll(
-                title, subtitle, emailField, nameField, ageField,
-                passwordField, confirmField, createBtn, loginBox
+                title, subtitle,
+                emailField, emailError,
+                nameField, nameError,
+                ageField, ageError,
+                passwordField, passwordError,
+                confirmField, confirmError,
+                createBtn, loginBox
         );
+        
         rightPanel.getChildren().add(formCard);
-
         root.getChildren().addAll(leftPanel, rightPanel);
+    }
+
+    private Label createErrorLabel() {
+        Label errorLabel = new Label();
+        errorLabel.getStyleClass().add("error-label");
+        errorLabel.setVisible(false);
+        errorLabel.setManaged(false); // Don't take space when hidden
+        return errorLabel;
     }
 
     public Scene getScene() {
@@ -118,7 +150,7 @@ public class RegisterUI {
         return scene;
     }
 
-    // ===== Getters for Logic/Controller =====
+    // ===== Getters for Controller =====
     public TextField getEmailField() { return emailField; }
     public TextField getNameField() { return nameField; }
     public TextField getAgeField() { return ageField; }
@@ -126,5 +158,31 @@ public class RegisterUI {
     public PasswordField getConfirmField() { return confirmField; }
     public Button getCreateBtn() { return createBtn; }
     public Label getLoginLink() { return loginLink; }
-}
 
+    // ===== Error Label Getters =====
+    public Label getEmailError() { return emailError; }
+    public Label getNameError() { return nameError; }
+    public Label getAgeError() { return ageError; }
+    public Label getPasswordError() { return passwordError; }
+    public Label getConfirmError() { return confirmError; }
+
+    // ===== Helper Methods =====
+    public void showError(Label errorLabel, String message) {
+        errorLabel.setText(message);
+        errorLabel.setVisible(true);
+        errorLabel.setManaged(true);
+    }
+
+    public void hideError(Label errorLabel) {
+        errorLabel.setVisible(false);
+        errorLabel.setManaged(false);
+    }
+
+    public void clearAllErrors() {
+        hideError(emailError);
+        hideError(nameError);
+        hideError(ageError);
+        hideError(passwordError);
+        hideError(confirmError);
+    }
+}

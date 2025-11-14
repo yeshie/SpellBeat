@@ -87,6 +87,52 @@
     -fx-text-fill: #59504B;
 }
 
+
+/* ======================================================
+   📝 IMPROVED REGISTER PAGE STYLES
+   ====================================================== */
+
+/* ===== Taller, Narrower Text Fields ===== */
+.register-text-field {
+    -fx-pref-width: 320px;
+    -fx-pref-height: 45px;
+    -fx-background-radius: 12px;
+    -fx-border-radius: 12px;
+    -fx-border-color: #C3CFE2;
+    -fx-border-width: 2px;
+    -fx-padding: 0 15 0 15;
+    -fx-font-size: 15px;
+    -fx-font-family: "Serif";
+    -fx-background-color: white;
+}
+
+.register-text-field:focused {
+    -fx-border-color: #ED8990;
+    -fx-border-width: 2px;
+}
+
+/* ===== Inline Error Labels ===== */
+.error-label {
+    -fx-font-size: 15px;
+    -fx-text-fill: #D32F2F;
+    -fx-font-weight: bold;
+    -fx-padding: 2 0 0 5;
+    -fx-font-family: "Serif";
+}
+
+/* ===== Form Card Adjustments ===== */
+.Rform-card {
+    -fx-background-color: rgba(255, 255, 255, 0.88);
+    -fx-background-radius: 22px;
+    -fx-padding: 28 35 20 35;
+    -fx-spacing: 10px;
+    -fx-alignment: center;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.12), 12, 0, 0, 3);
+    -fx-pref-width: 420px;
+    -fx-max-width: 450px;
+}
+
+
 /* ===== HomeController UI Styles ===== */
 
 /* ======================================================
@@ -834,6 +880,148 @@
 
 .winning-button-primary:hover {
     -fx-background-color: #FF6BA3;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+
+
+
+
+/* ======================================================
+   🎮 CUSTOM ALERT POPUP STYLES
+   ====================================================== */
+
+/* ===== Alert Box Container ===== */
+.custom-alert-box {
+    -fx-background-color: linear-gradient(to bottom, #FFE5EC, #FFF9E5);
+    -fx-background-radius: 25;
+    -fx-padding: 30 40 35 40;
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 100, 150, 0.5), 30, 0, 0, 10);
+    -fx-border-color: rgba(255, 182, 193, 0.8);
+    -fx-border-width: 3;
+    -fx-border-radius: 25;
+}
+
+/* ===== Alert Title ===== */
+.alert-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Serif";
+    -fx-text-fill: #59504B;
+    -fx-text-alignment: center;
+}
+
+/* ===== Alert Message ===== */
+.alert-message {
+    -fx-font-size: 16px;
+    -fx-font-family: "Serif";
+    -fx-text-fill: #59504B;
+    -fx-text-alignment: center;
+    -fx-line-spacing: 3;
+}
+
+/* ===== Alert OK Button ===== */
+.alert-button {
+    -fx-background-color: #FF8ABC;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-background-radius: 20;
+    -fx-padding: 12 40;
+    -fx-cursor: hand;
+    -fx-border-color: rgba(255, 255, 255, 0.3);
+    -fx-border-radius: 20;
+    -fx-border-width: 2;
+    -fx-min-width: 120px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 8, 0, 0, 3);
+}
+
+.alert-button:hover {
+    -fx-background-color: #FF6BA3;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}/* ======================================================
+   🎮 ONBOARDING TOUR POPUP STYLES
+   ====================================================== */
+
+/* ===== Tour Popup Box ===== */
+.tour-popup-box {
+    -fx-background-color: linear-gradient(to bottom, #FFE5F0, #FFF9E5);
+    -fx-background-radius: 25;
+    -fx-padding: 30 35 35 35;
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 100, 150, 0.6), 30, 0, 0, 10);
+    -fx-border-color: rgba(255, 182, 193, 0.9);
+    -fx-border-width: 2;
+    -fx-border-radius: 25;
+}
+
+/* ===== Tour Title ===== */
+.tour-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Serif";
+    -fx-text-fill: #59504B;
+    -fx-text-alignment: center;
+}
+
+/* ===== Tour Message ===== */
+.tour-message {
+    -fx-font-size: 15px;
+    -fx-font-family: "Serif";
+    -fx-text-fill: #59504B;
+    -fx-text-alignment: center;
+    -fx-line-spacing: 3;
+}
+
+/* ===== Tour Progress Label ===== */
+.tour-progress {
+    -fx-font-size: 12px;
+    -fx-font-family: "Serif";
+    -fx-text-fill: #999;
+    -fx-font-style: italic;
+}
+
+/* ===== Tour Next Button ===== */
+.tour-next-button {
+    -fx-background-color: #FF8ABC;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 15px;
+    -fx-background-radius: 20;
+    -fx-padding: 10 30;
+    -fx-cursor: hand;
+    -fx-border-color: rgba(255, 255, 255, 0.4);
+    -fx-border-radius: 20;
+    -fx-border-width: 2;
+    -fx-min-width: 120px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 6, 0, 0, 2);
+}
+
+.tour-next-button:hover {
+    -fx-background-color: #FF6BA3;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* ===== Tour Skip Button ===== */
+.tour-skip-button {
+    -fx-background-color: #FFF3A5;
+    -fx-text-fill: #666;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-background-radius: 20;
+    -fx-padding: 10 25;
+    -fx-cursor: hand;
+    -fx-border-color: rgba(0, 0, 0, 0.1);
+    -fx-border-radius: 20;
+    -fx-border-width: 2;
+    -fx-min-width: 110px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.15), 5, 0, 0, 2);
+}
+
+.tour-skip-button:hover {
+    -fx-background-color: #FFE890;
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
 }
