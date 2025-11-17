@@ -29,7 +29,6 @@ public class HomeController {
         HomeUI homeUI = new HomeUI();
         VBox[] levelTiles = new VBox[12];
 
-        // Load completed levels from DB
         Set<Integer> completedLevels = new HashSet<>();
         for (int i = 1; i <= 12; i++) {
             if (UserProgressDAO.isLevelCompleted(user.getId(), i)) {
@@ -37,7 +36,6 @@ public class HomeController {
             }
         }
 
-        // Determine next playable level
         int nextLevel = 1;
         for (int i = 1; i <= 12; i++) {
             if (!completedLevels.contains(i)) {
@@ -46,7 +44,6 @@ public class HomeController {
             }
         }
 
-        // Build uniform level tiles
         for (int i = 1; i <= 12; i++) {
             boolean completed = completedLevels.contains(i);
             boolean playable = (i == nextLevel);
@@ -54,31 +51,24 @@ public class HomeController {
             
             String levelText = "Level " + String.format("%02d", i);
 
-            // Create uniform components with fixed dimensions
             Label titleLabel = createTitleLabel(levelText);
             StackPane iconContainer = createIconContainer(homeUI);
             StackPane starsContainer = createStarsContainer(homeUI, completed);
             StackPane actionContainer = createActionContainer(homeUI, user, i, stage, completed, playable, locked);
 
-            // Create uniform tile structure
             levelTiles[i - 1] = createUniformTile(titleLabel, iconContainer, starsContainer, actionContainer);
         }
 
-        // Scrollable level area
         Node levelSelectArea = homeUI.createLevelSelectArea((Node[]) levelTiles);
 
-        // Build root BorderPane
         javafx.scene.layout.BorderPane root = new javafx.scene.layout.BorderPane();
         root.getStyleClass().add("game-root");
 
-        // Top bar
         TopBarController topBar = new TopBarController(user, stage);
         root.setTop(topBar.getView());
 
-        // Center
         root.setCenter(levelSelectArea);
 
-        // Scene
         Scene scene = new Scene(root, 1000, 650);
         scene.getStylesheets().add(HomeController.class.getResource("/css/style.css").toExternalForm());
         stage.setScene(scene);
@@ -87,19 +77,16 @@ public class HomeController {
         return scene;
     }
 
-    // Create uniform tile with fixed spacers for perfect alignment
     private static VBox createUniformTile(Label titleLabel, StackPane iconContainer, 
                                           StackPane starsContainer, StackPane actionContainer) {
         VBox tile = new VBox();
         tile.setAlignment(Pos.CENTER);
         tile.getStyleClass().add("level-tile");
-        
-        // Fixed dimensions for uniform tiles
         tile.setPrefSize(180, 300);
         tile.setMinSize(180, 300);
         tile.setMaxSize(180, 300);
 
-        // Spacer 1: Top padding (title to top)
+        // Spacer 1: Top padding 
         Region spacer1 = new Region();
         spacer1.setPrefHeight(15);
         spacer1.setMinHeight(15);
@@ -117,11 +104,7 @@ public class HomeController {
         spacer3.setMinHeight(15);
         spacer3.setMaxHeight(15);
 
-        // Spacer 4: Stars to Action (move completed banner more upward)
-        // Tile height: 300
-        // Used so far: 15 (sp1) + 30 (title) + 20 (sp2) + 90 (icon) + 15 (sp3) + 50 (stars) = 220
-        // Remaining: 300 - 220 - 38 (action) = 42
-        // For completed: 5 above, 37 below (moves banner significantly up)
+        // Spacer 4: Stars to Action 
         Region spacer4 = new Region();
         spacer4.setPrefHeight(5);
         spacer4.setMinHeight(5);
@@ -133,7 +116,6 @@ public class HomeController {
         spacer5.setMinHeight(37);
         spacer5.setMaxHeight(37);
 
-        // Add components with fixed spacing
         tile.getChildren().addAll(
             spacer1,
             titleLabel,
@@ -149,7 +131,6 @@ public class HomeController {
         return tile;
     }
 
-    // Create uniform title label with fixed dimensions
     private static Label createTitleLabel(String text) {
         Label label = new Label(text);
         label.getStyleClass().add("level-title");
@@ -161,7 +142,6 @@ public class HomeController {
         return label;
     }
 
-    // Create uniform icon container with fixed dimensions
     private static StackPane createIconContainer(HomeUI homeUI) {
         ImageView trophyIcon = homeUI.createIconView("/images/level.png", 130, 130);
         trophyIcon.setSmooth(true);
@@ -176,7 +156,6 @@ public class HomeController {
         return container;
     }
 
-    // Create uniform stars container with fixed dimensions
     private static StackPane createStarsContainer(HomeUI homeUI, boolean completed) {
         StackPane container = new StackPane();
         container.setPrefSize(60, 50);
@@ -185,13 +164,11 @@ public class HomeController {
         container.setAlignment(Pos.CENTER);
 
         if (completed) {
-            // Show completed star
             ImageView starIcon = homeUI.createIconView("/images/star.png", 100, 100);
             starIcon.setSmooth(true);
             starIcon.setPreserveRatio(true);
             container.getChildren().add(starIcon);
         } else {
-            // Show loading star for playable and locked levels
             ImageView loadingStarIcon = homeUI.createIconView("/images/loadingStar.png", 100, 100);
             loadingStarIcon.setSmooth(true);
             loadingStarIcon.setPreserveRatio(true);
@@ -201,7 +178,6 @@ public class HomeController {
         return container;
     }
 
-    // Create uniform action container with fixed dimensions and centered content
     private static StackPane createActionContainer(HomeUI homeUI, User user, int level, 
                                                     Stage stage, boolean completed, 
                                                     boolean playable, boolean locked) {
@@ -214,10 +190,9 @@ public class HomeController {
         Node content;
         
         if (completed) {
-            // Banner image with centered "Completed" text overlay
             ImageView bannerImage = homeUI.createIconView("/images/banner.png", 130, 38);
             bannerImage.setSmooth(true);
-            bannerImage.setPreserveRatio(false); // Stretch to fit exact dimensions
+            bannerImage.setPreserveRatio(false); 
             
             Label completedLabel = new Label("Completed");
             completedLabel.getStyleClass().add("level-completed-text");
@@ -225,7 +200,7 @@ public class HomeController {
             completedLabel.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
             completedLabel.setTranslateY(-8);
             
-            // Stack text on top of banner image
+           
             StackPane bannerWithText = new StackPane();
             bannerWithText.setPrefSize(130, 38);
             bannerWithText.setMinSize(130, 38);
@@ -236,7 +211,6 @@ public class HomeController {
             content = bannerWithText;
             
         } else if (playable) {
-            // Play button centered in action area
             Button playButton = new Button("Let's Play!");
             playButton.getStyleClass().add("level-play-button");
             playButton.setAlignment(Pos.CENTER);
@@ -246,12 +220,10 @@ public class HomeController {
             HomeLogic.setupPlayButton(playButton, user, level, stage);
             content = playButton;
             
-        } else { // locked
-            // Lock icon centered in action area (same space as button would occupy)
+        } else { 
             ImageView lockIcon = homeUI.createIconView("/images/lock.png", 100, 100);
             lockIcon.setSmooth(true);
             lockIcon.setPreserveRatio(true);
-            // Lock icon inherits container's center alignment
             content = lockIcon;
         }
 

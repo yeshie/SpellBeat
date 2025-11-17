@@ -44,35 +44,7 @@ public class AuthService {
         }
     }
 
-    // ===== Login existing user (compare encrypted passwords) =====
-    public static User login(String username, String password) {
-        String encryptedPassword = encryptPassword(password); // 🔒 encrypt before checking
-        String sql = "SELECT * FROM users WHERE username=? AND password=?";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setString(1, username);
-            stmt.setString(2, encryptedPassword);
-
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                User user = new User();
-                user.setId(rs.getInt("id"));
-                user.setName(rs.getString("username"));
-                user.setEmail(rs.getString("email"));
-                user.setPassword(rs.getString("password"));
-                user.setAge(rs.getInt("age"));
-                user.setAvatarPath(rs.getString("avatar_path"));
-                user.setHearts(rs.getInt("heart_points"));
-                user.setCurrentLevel(rs.getInt("current_level"));
-                return user;
-            }
-
-        } catch (SQLException e) {
-            System.out.println("❌ Login Error: " + e.getMessage());
-        }
-        return null;
-    }
+    
 
     // ===== Update heart points dynamically =====
     public static void updateHeartPoints(int userId, int newHearts) {

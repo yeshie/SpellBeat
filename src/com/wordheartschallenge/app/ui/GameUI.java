@@ -44,13 +44,15 @@ public class GameUI {
     public Node createGameArea(Label definitionLabel, HBox guessBoxContainer, Label hintLabel, Button hintButton) {
         VBox container = new VBox(20);
         container.setAlignment(Pos.CENTER);
-        container.setPadding(new Insets(20));
+        container.setPadding(new Insets(20, 20, 0, 20)); // Top, Right, Bottom, Left (bottom reduced)
         container.getStyleClass().add("game-center-card");
 
         VBox definitionBox = new VBox();
         definitionBox.setAlignment(Pos.CENTER);
         definitionBox.getStyleClass().add("definition-box");
         definitionBox.getChildren().add(definitionLabel);
+        definitionBox.setPrefWidth(650);
+    
 
         guessBoxContainer.setAlignment(Pos.CENTER);
 
@@ -59,7 +61,8 @@ public class GameUI {
     }
 
     // Keyboard Area
-    public Node createKeyboardArea(List<Button> row1, List<Button> row2, Button submitButton) {
+    public Node createKeyboardArea(List<Button> row1, List<Button> row2, Button submitButton,
+            Button backspaceButton, Button refreshButton) {
         VBox keyboardArea = new VBox(20);
         keyboardArea.setAlignment(Pos.CENTER);
         keyboardArea.setPadding(new Insets(10, 20, 30, 20));
@@ -73,7 +76,11 @@ public class GameUI {
         rowBox2.setAlignment(Pos.CENTER);
         rowBox2.getChildren().addAll(row2);
 
-        keyboardArea.getChildren().addAll(rowBox1, rowBox2, submitButton);
+        HBox submitRow = new HBox(15);
+        submitRow.setAlignment(Pos.CENTER);
+        submitRow.getChildren().addAll(backspaceButton, submitButton, refreshButton);
+
+        keyboardArea.getChildren().addAll(rowBox1, rowBox2, submitRow);
         return keyboardArea;
     }
 

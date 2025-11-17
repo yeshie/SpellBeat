@@ -12,20 +12,16 @@ public class ProfileController {
 
     public static Scene createScene(User user, Stage stage, TopBarController topBarController) {
 
-        // Use existing top bar
         Node topBar = topBarController.getView();
 
         BorderPane root = new BorderPane();
         root.setTop(topBar);
 
-        // Build Profile UI
         ProfileUI ui = new ProfileUI(user);
         root.setCenter(ui.getCard());
 
-        // Profile logic with access to TopBarController
         ProfileLogic logic = new ProfileLogic(user, topBarController);
 
-        // Save button action
         ui.getSaveBtn().setOnAction(e -> {
             String selectedAvatar = ui.getAvatarGroup().getSelectedToggle() != null ?
                     ui.getAvatarGroup().getSelectedToggle().getUserData().toString() :

@@ -22,7 +22,7 @@ public class TopBarController {
     private final Stage stage;
     private final Label heartsLabel;
     private final Label levelLabel;
-    private ImageView avatarIcon; // Direct reference to the live avatar ImageView
+    private ImageView avatarIcon; 
 
     public TopBarController(User user, Stage stage) {
         this.user = user;
@@ -31,7 +31,7 @@ public class TopBarController {
         this.levelLabel = new Label("Level " + user.getCurrentLevel());
     }
 
- // Add these ID setters to your TopBarController getView() method
+
 
     public Node getView() {
         HBox topBar = new HBox();
@@ -39,9 +39,8 @@ public class TopBarController {
         topBar.setAlignment(Pos.CENTER);
         topBar.setSpacing(10);
 
-        // LEFT: Avatar + Home button
         HBox avatarChip = createInfoChip(ensureLeadingSlash(user.getAvatarPath()), user.getName(), true);
-        avatarChip.setId("avatar-chip"); // ✅ Add ID for tour
+        avatarChip.setId("avatar-chip"); 
         avatarChip.setOnMouseClicked(e -> {
             Scene profileScene = ProfileController.createScene(user, stage, this);
             stage.setScene(profileScene);
@@ -49,7 +48,7 @@ public class TopBarController {
         avatarIcon = (ImageView) avatarChip.getChildren().get(0);
 
         Button homeButton = createIconButton("/images/home.png");
-        homeButton.setId("home-button"); // ✅ Add ID for tour
+        homeButton.setId("home-button"); 
         homeButton.setOnAction(e -> {
             Scene homelandScene = HomeLandController.createScene(user, stage);
             stage.setScene(homelandScene);
@@ -58,20 +57,18 @@ public class TopBarController {
         HBox leftBox = new HBox(12, avatarChip, homeButton);
         leftBox.setAlignment(Pos.CENTER_LEFT);
 
-        // CENTER: App logo
         ImageView logo = createIconView("/images/logo.png", 160, 80);
         logo.setId("logoIcon");
         VBox logoBox = new VBox(logo);
         logoBox.setAlignment(Pos.CENTER);
 
-        // RIGHT: Hearts, Level, Logout
         HBox heartsChip = createInfoChip("/images/heartLogo.png", heartsLabel.getText(), false);
-        heartsChip.setId("hearts-chip"); // ✅ Add ID for tour
+        heartsChip.setId("hearts-chip"); 
         ((ImageView) heartsChip.getChildren().get(0)).setId("heartIcon");
         heartsChip.getChildren().set(1, heartsLabel);
 
         HBox levelChip = createInfoChip("/images/level.png", levelLabel.getText(), false);
-        levelChip.setId("level-chip"); // ✅ Add ID for tour
+        levelChip.setId("level-chip"); 
         ((ImageView) levelChip.getChildren().get(0)).setId("levelIcon");
         levelChip.getChildren().set(1, levelLabel);
 
@@ -107,16 +104,15 @@ public class TopBarController {
     }
     
     public void updateAvatar(String newAvatarPath) {
-        // Ensure the path starts with / but don't add it if it's already there
         String correctedPath = newAvatarPath.startsWith("/") ? newAvatarPath : "/" + newAvatarPath;
         user.setAvatarPath(correctedPath);
-        System.out.println("DEBUG: Updating avatar to: " + correctedPath); // DEBUG
+        System.out.println("DEBUG: Updating avatar to: " + correctedPath); 
         if (avatarIcon != null) {
             try (InputStream stream = TopBarController.class.getResourceAsStream(correctedPath)) {  // ✅ Use correctedPath directly (no extra /)
                 if (stream != null) {
                     Image newImage = new Image(stream);
                     avatarIcon.setImage(newImage);
-                    System.out.println("DEBUG: Avatar image updated successfully."); // DEBUG
+                    System.out.println("DEBUG: Avatar image updated successfully.");
                 } else {
                     System.err.println("ERROR: Avatar image not found: " + correctedPath);
                     setDefaultAvatar();
@@ -165,13 +161,12 @@ public class TopBarController {
         return btn;
     }
 
-    // Helper: load icons safely
     private static ImageView createIconView(String path, double width, double height) {
         ImageView icon = new ImageView();
         try (InputStream stream = TopBarController.class.getResourceAsStream(path)) {
             if (stream != null) {
                 icon.setImage(new Image(stream));
-                System.out.println("DEBUG: Loaded icon: " + path); // DEBUG
+                System.out.println("DEBUG: Loaded icon: " + path); 
             } else {
                 System.err.println("ERROR: Icon not found: " + path);
             }

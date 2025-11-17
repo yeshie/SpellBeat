@@ -11,12 +11,10 @@ public class RegisterController {
     public static Scene createScene() {
         RegisterUI ui = new RegisterUI();
         
-        // Login link action
         ui.getLoginLink().setOnMouseClicked(e -> 
             SceneManager.switchScene(LoginController.createScene())
         );
         
-        // Create account button with custom alert validation
         ui.getCreateBtn().setOnAction(e -> {
             User user = RegisterLogic.createUser(
                     ui.getEmailField().getText().trim(),
@@ -27,10 +25,8 @@ public class RegisterController {
             );
             
             if (user != null) {
-                // Success - Pass user to PlayerProfileController
                 SceneManager.switchScene(PlayerProfileController.createScene(user));
             }
-            // If validation failed, custom alert is already shown
         });
         
         return ui.getScene();

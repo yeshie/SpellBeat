@@ -1,26 +1,23 @@
-/* ======================================================
-   🎮 WordHearts Challenge — Unified UI Theme (Full)
-   ====================================================== */
 
-/* ===== Root Background (Updated Gradient) ===== */
+/* Root Background */
 .root, .game-root, .profile-root {
     -fx-background-color: linear-gradient(to bottom right, #FF8BBB, #FFF174);
 }
 
-/* ===== Left Panel (Login) ===== */
+/* Left Panel (Login) */
 .left-panel {
     -fx-background-color: linear-gradient(to bottom, #FFAABB, #FFE59E);
     -fx-alignment: center;
 }
 
-/* ===== Right Panel (Login) ===== */
+/* Right Panel (Login) */
 .right-panel {
     -fx-background-color: #FCF8DB;
     -fx-padding: 50px;
     -fx-alignment: center;
 }
 
-/* ===== Form Card (Login/Profile) ===== */
+/* Form Card (Login/Profile) */
 .form-card, .profile-card {
     -fx-background-color: rgba(255, 255, 255, 0.85);
     -fx-background-radius: 20px;
@@ -34,7 +31,7 @@
     -fx-max-height: 450px;
 }
 
-/* ===== Titles ===== */
+/*  Titles  */
 .label-title, .profile-title, .game-title {
     -fx-font-size: 28px;
     -fx-font-weight: bold;
@@ -42,14 +39,14 @@
     -fx-text-fill: #59504B;
 }
 
-/* ===== Subtitles and Labels ===== */
+/* Subtitles and Labels */
 .label-subtitle, .game-info-label {
     -fx-font-size: 16px;
     -fx-font-family: "Serif";
     -fx-text-fill: #59504B;
 }
 
-/* ===== Input Fields ===== */
+/*  Input Fields  */
 .text-field, .password-field {
     -fx-pref-width: 300px;
     -fx-pref-height: 40px;
@@ -60,7 +57,7 @@
     -fx-padding: 0 10 0 10;
 }
 
-/* ===== Buttons ===== */
+/* Buttons */
 .primary-button,.level-play-button, .game-play-button {
     -fx-background-color: #ED8990;
     -fx-text-fill: white;
@@ -75,7 +72,7 @@
     -fx-background-color: #d47a80;
 }
 
-/* ===== Links ===== */
+/* Links */
 .link-label {
     -fx-font-weight: bold;
     -fx-text-fill: #BF6A5F;
@@ -88,11 +85,7 @@
 }
 
 
-/* ======================================================
-   📝 IMPROVED REGISTER PAGE STYLES
-   ====================================================== */
-
-/* ===== Taller, Narrower Text Fields ===== */
+/* Text Fields */
 .register-text-field {
     -fx-pref-width: 320px;
     -fx-pref-height: 45px;
@@ -111,16 +104,7 @@
     -fx-border-width: 2px;
 }
 
-/* ===== Inline Error Labels ===== */
-.error-label {
-    -fx-font-size: 15px;
-    -fx-text-fill: #D32F2F;
-    -fx-font-weight: bold;
-    -fx-padding: 2 0 0 5;
-    -fx-font-family: "Serif";
-}
 
-/* ===== Form Card Adjustments ===== */
 .Rform-card {
     -fx-background-color: rgba(255, 255, 255, 0.88);
     -fx-background-radius: 22px;
@@ -133,34 +117,27 @@
 }
 
 
-/* ===== HomeController UI Styles ===== */
+/* HomeController UI Styles */
 
-/* ======================================================
-   🎮 WordHearts Challenge — HomeController UI Styles
-   ====================================================== */
 
-/* ===== Root Background ===== */
 .game-root {
     -fx-background-color: linear-gradient(to bottom, #FFB3C1, #FFF3A5);
     -fx-padding: 20px;
 }
 
-/* ===== Top Bar (Invisible) ===== */
 .home-top-bar {
-    -fx-background-color: transparent; /* No visible bar */
-    -fx-padding: 0 24px;               /* Horizontal spacing */
+    -fx-background-color: transparent; 
+    -fx-padding: 0 24px;               
     -fx-alignment: center;
-    -fx-spacing: 40px;                 /* Space between sections */
-    -fx-pref-height: 60px;             /* Uniform height for all top elements */
+    -fx-spacing: 40px;                 
+    -fx-pref-height: 60px;             
 }
 
-/* ===== Top Left Section ===== */
 .top-left-section {
     -fx-alignment: center-left;
-    -fx-spacing: 12px;                 /* Slightly more spacing between items */
+    -fx-spacing: 12px;               
 }
 
-/* ===== Chips (Avatar, Heart, Level, Home Button) ===== */
 .home-chip {
     -fx-background-color: #F5F7CA;
     -fx-background-radius: 999px;
@@ -171,18 +148,15 @@
     -fx-padding: 6 10; /* default padding */
 }
 
-/* ===== Avatar chip wider for username ===== */
 .home-chip.wide {
     -fx-padding: 6 14;
 }
 
-/* ===== Labels inside chips ===== */
 .home-chip-label {
     -fx-font-weight: bold;
     -fx-text-fill: #555;
 }
 
-/* ===== Home Button inside top bar ===== */
 .home-button {
     -fx-background-color: #F5F7CA;
     -fx-background-radius: 999px;
@@ -193,18 +167,17 @@
 }
 
 .home-button:hover {
-    -fx-background-color: #EAEFC7; /* slightly darker on hover */
+    -fx-background-color: #EAEFC7; 
 }
 
 
-/* ===== Right Info Chips (Hearts & Level) ===== */
 .home-info-chip {
-    -fx-background-color: #F5F7CA;     /* Same uniform chip color */
+    -fx-background-color: #F5F7CA;     
     -fx-background-radius: 999px;
-    -fx-padding: 6 12;                 /* Match avatar chip height */
+    -fx-padding: 6 12;                
     -fx-alignment: center;
     -fx-spacing: 6px;
-    -fx-min-height: 40px;               /* Uniform height */
+    -fx-min-height: 40px;              
 }
 
 .home-info-label {
@@ -214,7 +187,6 @@
 
 
 
-/* ===== Logo Center ===== */
 .top-logo-box {
     -fx-alignment: center;
     -fx-spacing: 0;
@@ -225,28 +197,18 @@
     -fx-pref-width: 220px;
     -fx-pref-height: 280px;
 }
-/* ===== Always Visible Icon Scaling ===== */
 #homeIcon .image-view,
 #levelIcon {
     -fx-scale-x: 1.5;
     -fx-scale-y: 1.5;
 }
 
-/* ✅ Permanently scaled-up icons (visible always, not hover-based) */
 #logoIcon {
     -fx-scale-x: 2.5;
     -fx-scale-y: 2.5;
     -fx-translate-y: 20; 
 }
 
-/* Optional hover highlight (kept simple) */
-
-
-
-/* ===== Right Section ===== */
-
-
-/* ===== UNIFORM LEVEL TILES - PREMIUM DESIGN ===== */
 
 /* Transparent Background Card for Levels */
 .level-tile-background {
@@ -271,51 +233,20 @@
     -fx-background-color: transparent;
 }
 
-/* ===== UNIFORM LEVEL TILES - PREMIUM DESIGN ===== */
-
-/* Transparent Background Card for Levels */
-.level-tile-background {
-    -fx-background-color: rgba(255, 255, 255, 0.15); 
-    -fx-pref-width: 1400px; 
-    -fx-pref-height: 380px;
-    -fx-background-radius: 20; 
-    -fx-padding: 20 30; 
-    -fx-alignment: center;
-    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.08), 12, 0, 0, 4);
-}
-
-/* Scroll Pane */
-.scroll-pane {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-    -fx-pref-height: 380px;
-    -fx-max-height: 380px;
-}
-
-.scroll-pane > .viewport {
-    -fx-background-color: transparent;
-}
-
-/* ===== UNIFORM LEVEL TILE ===== */
+/*LEVEL TILE */
 .level-tile {
     -fx-background-color: linear-gradient(to bottom, #F8F9D7, #F5F7CA);
     -fx-background-radius: 18;
     -fx-padding: 18 16;
     -fx-alignment: center;
-    -fx-spacing: 0; /* No spacing - we use fixed spacers */
-    
-    /* Fixed dimensions for perfect uniformity */
+    -fx-spacing: 0; 
     -fx-pref-width: 180px;
     -fx-pref-height: 300px;
     -fx-min-width: 180px;
     -fx-min-height: 300px;
     -fx-max-width: 180px;
     -fx-max-height: 300px;
-    
-    /* Premium shadow */
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.12), 8, 0, 0, 3);
-    
-    /* Subtle border for polish */
     -fx-border-color: rgba(255, 255, 255, 0.6);
     -fx-border-width: 1.5;
     -fx-border-radius: 18;
@@ -327,7 +258,7 @@
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.18), 12, 0, 0, 5);
 }
 
-/* ===== LEVEL TITLE - PERFECTLY ALIGNED ===== */
+/* LEVEL TITLE  */
 .level-title {
     -fx-font-size: 17px;
     -fx-font-weight: bold;
@@ -335,14 +266,12 @@
     -fx-font-family: "Serif";
     -fx-alignment: center;
     -fx-text-alignment: center;
-    
-    /* Fixed height ensures vertical alignment */
     -fx-pref-height: 24px;
     -fx-min-height: 24px;
     -fx-max-height: 24px;
 }
 
-/* ===== PLAY BUTTON - UNIFORM SIZE ===== */
+
 .level-play-button {
     -fx-background-color: linear-gradient(to bottom, #ED8990, #E17178);
     -fx-text-fill: white;
@@ -352,15 +281,12 @@
     -fx-border-radius: 12px;
     -fx-border-color: rgba(255, 255, 255, 0.3);
     -fx-border-width: 1;
-    
-    /* Fixed dimensions for uniformity */
     -fx-pref-width: 130px;
     -fx-pref-height: 38px;
     -fx-min-width: 130px;
     -fx-min-height: 38px;
     -fx-max-width: 130px;
     -fx-max-height: 38px;
-    
     -fx-cursor: hand;
     -fx-alignment: center;
     -fx-padding: 0;
@@ -372,7 +298,6 @@
     -fx-scale-y: 1.02;
 }
 
-/* ===== COMPLETED BANNER - UNIFORM SIZE ===== */
 .level-completed-banner {
     -fx-font-size: 14px;
     -fx-font-weight: bold;
@@ -382,8 +307,6 @@
     -fx-border-radius: 12px;
     -fx-border-color: rgba(76, 175, 80, 0.3);
     -fx-border-width: 1;
-    
-    /* Fixed dimensions matching play button */
     -fx-pref-width: 130px;
     -fx-pref-height: 38px;
     -fx-min-width: 130px;
@@ -395,7 +318,6 @@
     -fx-padding: 0;
 }
 
-/* ===== SCROLL ARROWS - MODERN DESIGN ===== */
 .home-arrow-button {
     -fx-background-color: rgba(255, 255, 255, 0.25);
     -fx-text-fill: #FF6B81;
@@ -416,28 +338,27 @@
     -fx-scale-y: 1.08;
 }
 
-/* ===== LEVEL SCROLL WRAPPER ===== */
 .level-scroll-wrapper {
     -fx-padding: 20 0;
     -fx-spacing: 15;
 }
 
-/* ===== Home Button ===== */
+/* Game Page */
 .game-home-button {
     -fx-background-color: transparent;
     -fx-cursor: hand;
 }
 
 
-/* ===== Transparent Card ===== */
+/* Transparent Card */
 .game-center-card {
     -fx-background-color: rgba(255, 255, 255, 0.12);
     -fx-background-radius: 20;
-    -fx-padding: 30;
+        -fx-padding: 30 30 0 30; /* top right bottom left */
+    
     -fx-effect: dropshadow(three-pass-box, rgba(255, 255, 255, 0.3), 10, 0, 0, 4);
 }
 
-/* ===== Guess Boxes ===== */
 .game-guess-box {
     -fx-background-color: rgba(255, 255, 255, 0.18);
     -fx-text-fill: white;
@@ -449,45 +370,121 @@
     -fx-border-color: rgba(255, 255, 255, 0.4);
     -fx-border-radius: 10;
 }
-/* ===== Definition Box (Pastel Yellow Glass) ===== */
+
+.game-small-button {
+    -fx-background-color: #ED8990;   /* same pink tone */
+    -fx-background-radius: 8px;      /* slightly smaller radius */
+    -fx-padding: 6 12 6 12;          /* smaller padding */
+    -fx-cursor: hand;
+}
+
+.game-small-button:hover {
+    -fx-background-color: #d47a80;   /* same hover effect */
+}
+
+
+
+/* ===== DEFINITION BOX - Dynamic Sizing ===== */
 .definition-box {
-    -fx-background-color: rgba(255, 250, 205, 0.35); /* soft pastel yellow glass */
+    -fx-background-color: rgba(255, 250, 205, 0.35);
     -fx-background-radius: 15;
-    -fx-padding: 15;
+    -fx-padding: 20 25; /* ✅ Generous padding for readability */
     -fx-effect: dropshadow(three-pass-box, rgba(255, 255, 180, 0.4), 10, 0, 0, 4);
-    -fx-max-width: 650px;
+    
+    /* ✅ FIXED: Dynamic width and height */
+    -fx-min-width: 400px;
+    -fx-max-width: 750px;
+    -fx-pref-width: 600px;
+    
+    -fx-min-height: 80px; /* Minimum comfortable height */
+    -fx-pref-height: -1; /* ✅ Auto-compute based on content */
+    -fx-max-height: Infinity; /* ✅ Allow unlimited growth */
+    
     -fx-alignment: center;
     -fx-border-color: rgba(255, 240, 140, 0.6);
     -fx-border-radius: 15;
 }
 
-/* ===== Definition Text ===== */
+/* ===== DEFINITION LABEL - Fully Responsive ===== */
 .definition-label {
-    -fx-text-fill: #3e3e1f; /* dark yellowish text */
     -fx-font-size: 18px;
     -fx-font-weight: bold;
+    -fx-text-fill: #3e3e1f;
     -fx-text-alignment: center;
+    -fx-alignment: center;
+    -fx-wrap-text: true;
+    -fx-line-spacing: 4; /* Better line spacing for readability */
+    
+    /* ✅ FIXED: Dynamic sizing constraints */
+    -fx-min-width: 400px;
+    -fx-max-width: 700px;
+    -fx-pref-width: 600px;
+    
+    -fx-min-height: -1; /* ✅ Compute from content */
+    -fx-pref-height: -1; /* ✅ Compute from content */
+    -fx-max-height: Infinity; /* ✅ No height limit */
 }
 
-/* ===== Hint Button ===== */
+/* ===== HINT BUTTON - Clean Design ===== */
 .game-hint-button {
     -fx-background-color: linear-gradient(to bottom, #fff8dc, #ffea97);
-    -fx-background-radius: 10;
-    -fx-border-color: #b7950b;
-    -fx-border-radius: 10;
-    -fx-padding: 6 10;
+    -fx-background-radius: 12;
+    -fx-border-color: #d4af37;
+    -fx-border-radius: 12;
+    -fx-border-width: 2;
+    -fx-padding: 10 16;
     -fx-font-weight: bold;
-    -fx-font-size: 13px;
+    -fx-font-size: 14px;
     -fx-text-fill: #333;
+    -fx-alignment: center;
+    -fx-min-width: 120px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.15), 5, 0, 0, 2);
+}
+
+.game-hint-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #fff4c4, #ffe080);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+    -fx-border-color: #b8950d;
+}
+
+/* ===== HINT LABEL ===== */
+.hint-label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-alignment: center;
+    -fx-alignment: center;
+    -fx-wrap-text: true;
+    -fx-max-width: 700px;
+    -fx-padding: 10 0;
+    -fx-line-spacing: 3;
+}
+
+/* ===== ANIMATED HEART DEDUCTION MESSAGE BOX ===== */
+.animated-hint-message {
+    -fx-background-color: rgba(255, 100, 150, 0.96);
+    -fx-background-radius: 20;
+    -fx-padding: 12 20;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.5), 20, 0, 0, 8);
+    -fx-border-color: rgba(255, 255, 255, 0.7);
+    -fx-border-width: 2.5;
+    -fx-border-radius: 20;
+    -fx-min-width: 120px;
     -fx-alignment: center;
 }
 
-
-.game-hint-button:hover {
-    -fx-background-color: rgba(255, 255, 255, 0.35);
+/* ===== ANIMATED MESSAGE TEXT ===== */
+.animated-hint-text {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Serif";
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 4, 0, 0, 2);
 }
 
-/* ===== Keyboard ===== */
+
+/* Keyboard */
 .game-key {
     -fx-background-color: rgba(255, 139, 186, 1);
     -fx-text-fill: #fff;
@@ -502,20 +499,18 @@
     -fx-background-color: rgba(255, 255, 255, 0.35);
 }
 
-/* ===== Keyboard Area ===== */
+/*Keyboard Area */
 .keyboard-area {
     -fx-alignment: center;
 }
-/* ======================================================
-   💖 SpellBeat — Mini Heart Game (HeartController)
-   ====================================================== */
+/*  Mini Heart Game */
 
 .miniheart-root {
     -fx-background-color: linear-gradient(to bottom, #FFB3C1, #FFF3A5);
     -fx-padding: 20px;
 }
 
-/* ===== Top Bar ===== */
+/*Top Bar */
 .miniheart-top-bar {
     -fx-background-color: transparent;
     -fx-alignment: center;
@@ -542,7 +537,7 @@
     -fx-font-family: "Serif";
 }
 
-/* ===== Game Title ===== */
+/* Game Title */
 .miniheart-title {
     -fx-font-size: 24px;
     -fx-font-weight: bold;
@@ -550,7 +545,6 @@
     -fx-text-fill: #2B1E1C;
 }
 
-/* ===== Center Game Box ===== */
 .miniheart-game-box {
     -fx-background-color: linear-gradient(to bottom, #FFD3C1, #FFF3B8);
     -fx-background-radius: 12;
@@ -562,7 +556,6 @@
     -fx-effect: dropshadow(three-pass-box, rgba(255, 182, 193, 0.5), 10, 0, 0, 4);
 }
 
-/* ===== Number Buttons ===== */
 .miniheart-number-btn {
     -fx-background-color: #FF9ECD;
     -fx-text-fill: #FFE59E;
@@ -577,7 +570,6 @@
     -fx-background-color: #FF8ABC;
 }
 
-/* ===== Navigation Buttons (Back/Next) ===== */
 .miniheart-nav-btn {
     -fx-background-color: #FFB3C1;
     -fx-text-fill: #4A3C36;
@@ -592,7 +584,6 @@
     -fx-background-color: #FFA1B2;
 }
 
-/* ===== Heart Counter Chip ===== */
 .miniheart-heart-chip {
     -fx-background-color: #FDE5E8;
     -fx-background-radius: 999px;
@@ -608,20 +599,14 @@
 }
 
 
-/* ======================================= */
-/* ===== NEW: HomeLand Page Styles   ===== */
-/* ======================================= */
-/* ===============================
-   HOME LAND PAGE (Unique Styles)
-   =============================== */
+/*HOME LAND PAGE */
 
-/* ===== Root Background ===== */
 .game-root-hl {
     -fx-background-color: linear-gradient(to bottom, #FFB3C1, #FFF3A5);
     -fx-padding: 20px;
 }
 
-/* ===== Top Bar ===== */
+/* Top Bar */
 .home-top-bar-hl {
     -fx-background-color: transparent;
     -fx-padding: 0 24px;
@@ -630,7 +615,7 @@
     -fx-pref-height: 60px;
 }
 
-/* ===== Chips (Avatar, Heart, Level) ===== */
+/*  Chips (Avatar, Heart, Level) */
 .home-chip-hl {
     -fx-background-color: #F5F7CA;
     -fx-background-radius: 999px;
@@ -650,7 +635,7 @@
     -fx-text-fill: #555;
 }
 
-/* ===== Home Button ===== */
+/*Home Button*/
 .home-button-hl {
     -fx-background-color: #F5F7CA;
     -fx-background-radius: 999px;
@@ -664,7 +649,7 @@
     -fx-background-color: #EAEFC7;
 }
 
-/* ===== Logout Button ===== */
+/* Logout Button */
 .logout-button-hl {
     -fx-background-color: #F5F7CA;
     -fx-text-fill: #C01358;
@@ -680,7 +665,7 @@
     -fx-background-color: #FFCCD5;
 }
 
-/* ===== Game Selection Area ===== */
+/*Game Selection Area */
 .game-center-wrapper-hl {
     -fx-alignment: center;
     -fx-padding: 40 0;
@@ -728,8 +713,8 @@
 .profile-card {
     -fx-background-color: rgba(255, 255, 255, 0.9);
     -fx-background-radius: 20px;
-    -fx-padding: 30 30 15 30;   /* top right bottom left (reduced bottom from 30 → 15) */
-    -fx-spacing: 12px;          /* slightly tighter spacing between children */
+    -fx-padding: 30 30 15 30;   
+    -fx-spacing: 12px;          
     -fx-alignment: center;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 3);
     -fx-max-width: 450px;
@@ -752,8 +737,8 @@
     
 }
 .profile-textfield {
-    -fx-pref-width: 260px;     /* slight width */
-    -fx-min-height: 35px;      /* ensures taller height */
+    -fx-pref-width: 260px;     
+    -fx-min-height: 35px;      
     -fx-pref-height: 45px;
     -fx-background-radius: 10px;
     -fx-border-radius: 10px;
@@ -794,16 +779,12 @@
     -fx-padding: 8 0 0 0;
 }
 
-/* ======================================================
-   🎉 WINNING PAGE STYLES - LAYERED DESIGN
-   ====================================================== */
 
-/* ===== Root Background ===== */
+/* Winning Page */
 .winning-root {
     -fx-background-color: linear-gradient(to bottom, #FFB3C1, #FFF3A5);
 }
 
-/* ===== 1. PINK BACKGROUND CARD (Bottom Layer) ===== */
 .winning-pink-card {
     -fx-background-color: #FFB6C1;
     -fx-background-radius: 35;
@@ -813,18 +794,16 @@
     -fx-border-radius: 35;
 }
 
-/* ===== 2. YELLOW MESSAGE BOX (Overlaying Pink) ===== */
 .winning-yellow-box {
     -fx-background-color: #FFFACD;
     -fx-background-radius: 30;
--fx-padding: 70 40 30 40; 
+    -fx-padding: 70 40 30 40; 
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.25), 15, 0, 0, 5);
     -fx-border-color: rgba(255, 220, 100, 0.6);
     -fx-border-width: 2;
     -fx-border-radius: 30;
 }
 
-/* ===== 3. Congratulations Text on Banner ===== */
 .winning-congrats-text {
     -fx-font-size: 28px;
     -fx-font-weight: bold;
@@ -833,7 +812,6 @@
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.6), 5, 0, 0, 2);
 }
 
-/* ===== Level Completed Title ===== */
 .winning-title {
     -fx-font-size: 32px;
     -fx-font-weight: bold;
@@ -841,7 +819,6 @@
     -fx-text-fill: #2B1E1C;
 }
 
-/* ===== Buttons ===== */
 .winning-button {
     -fx-background-color: #FFF3A5;
     -fx-text-fill: #333;
@@ -888,11 +865,8 @@
 
 
 
-/* ======================================================
-   🎮 CUSTOM ALERT POPUP STYLES
-   ====================================================== */
+/*  CUSTOM ALERT POPUP STYLES */
 
-/* ===== Alert Box Container ===== */
 .custom-alert-box {
     -fx-background-color: linear-gradient(to bottom, #FFE5EC, #FFF9E5);
     -fx-background-radius: 25;
@@ -903,7 +877,6 @@
     -fx-border-radius: 25;
 }
 
-/* ===== Alert Title ===== */
 .alert-title {
     -fx-font-size: 24px;
     -fx-font-weight: bold;
@@ -912,7 +885,6 @@
     -fx-text-alignment: center;
 }
 
-/* ===== Alert Message ===== */
 .alert-message {
     -fx-font-size: 16px;
     -fx-font-family: "Serif";
@@ -921,7 +893,6 @@
     -fx-line-spacing: 3;
 }
 
-/* ===== Alert OK Button ===== */
 .alert-button {
     -fx-background-color: #FF8ABC;
     -fx-text-fill: white;
@@ -941,11 +912,11 @@
     -fx-background-color: #FF6BA3;
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
-}/* ======================================================
-   🎮 ONBOARDING TOUR POPUP STYLES
-   ====================================================== */
+}
 
-/* ===== Tour Popup Box ===== */
+/* ONBOARDING TOUR POPUP STYLES */
+
+
 .tour-popup-box {
     -fx-background-color: linear-gradient(to bottom, #FFE5F0, #FFF9E5);
     -fx-background-radius: 25;
@@ -956,7 +927,7 @@
     -fx-border-radius: 25;
 }
 
-/* ===== Tour Title ===== */
+
 .tour-title {
     -fx-font-size: 22px;
     -fx-font-weight: bold;
@@ -965,7 +936,7 @@
     -fx-text-alignment: center;
 }
 
-/* ===== Tour Message ===== */
+
 .tour-message {
     -fx-font-size: 15px;
     -fx-font-family: "Serif";
@@ -974,7 +945,7 @@
     -fx-line-spacing: 3;
 }
 
-/* ===== Tour Progress Label ===== */
+
 .tour-progress {
     -fx-font-size: 12px;
     -fx-font-family: "Serif";
@@ -982,7 +953,7 @@
     -fx-font-style: italic;
 }
 
-/* ===== Tour Next Button ===== */
+
 .tour-next-button {
     -fx-background-color: #FF8ABC;
     -fx-text-fill: white;
@@ -1004,7 +975,7 @@
     -fx-scale-y: 1.05;
 }
 
-/* ===== Tour Skip Button ===== */
+
 .tour-skip-button {
     -fx-background-color: #FFF3A5;
     -fx-text-fill: #666;
@@ -1025,3 +996,26 @@
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
 }
+
+
+
+/* ===== Animated Message Box ===== */
+.animated-hint-message {
+    -fx-background-color: rgba(255, 100, 150, 0.95);
+    -fx-background-radius: 20;
+    -fx-padding: 12 20;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 15, 0, 0, 5);
+    -fx-border-color: rgba(255, 255, 255, 0.6);
+    -fx-border-width: 2;
+    -fx-border-radius: 20;
+}
+
+/* ===== Animated Message Text ===== */
+.animated-hint-text {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Serif";
+    -fx-text-fill: white;
+}
+
+

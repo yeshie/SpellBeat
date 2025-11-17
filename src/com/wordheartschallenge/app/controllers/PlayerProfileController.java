@@ -19,7 +19,6 @@ public class PlayerProfileController {
         PlayerProfileUI ui = new PlayerProfileUI(user);
         PlayerProfileLogic logic = new PlayerProfileLogic(user, ui);
         
-        // Set the "Let's Play" button action
         ui.setOnLetsPlay(() -> logic.handleLetsPlay());
         
         this.scene = ui.getScene();

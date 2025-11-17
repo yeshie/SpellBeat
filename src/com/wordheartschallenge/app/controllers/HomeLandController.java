@@ -14,18 +14,14 @@ public class HomeLandController {
         BorderPane root = new BorderPane();
         root.getStyleClass().add("game-root-hl");
         
-        // Top Bar
         TopBarController topBar = new TopBarController(user, stage);
         root.setTop(topBar.getView());
         
-        // UI
         HomeLandUI ui = new HomeLandUI();
         root.setCenter(ui.getView());
         
-        // Set IDs for onboarding tour targeting
         ui.getView().setId("game-tiles");
         
-        // Logic
         new HomeLandLogic(user, stage, ui);
         
         user.setLastScreen("HomeLand");
@@ -35,7 +31,6 @@ public class HomeLandController {
         stage.setScene(scene);
         stage.show();
         
-        // ✅ Start onboarding tour for new users (pass scene, not stage)
         OnBoardingTour.checkAndStart(user, scene);
         
         return scene;

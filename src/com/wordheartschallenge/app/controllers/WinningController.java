@@ -20,14 +20,11 @@ import java.util.Random;
 public class WinningController {
 
     public static Scene createScene(User user, int currentLevel, int hearts, Stage stage) {
-        // Root StackPane for layering
         StackPane root = new StackPane();
         root.getStyleClass().add("winning-root");
 
-        // Background with ink blast animation
         Pane animationLayer = createAnimationLayer();
         
-        // Main content card
         VBox contentCard = createContentCard(user, currentLevel, hearts, stage);
 
         root.getChildren().addAll(animationLayer, contentCard);
@@ -49,7 +46,6 @@ public class WinningController {
         Pane layer = new Pane();
         layer.setMouseTransparent(true);
         
-        // Add ink blast images (left and right)
         ImageView leftBlast = loadImage("/images/ink.png", 400, 400);
         ImageView rightBlast = loadImage("/images/ink.png", 400, 400);
         
@@ -73,7 +69,6 @@ public class WinningController {
     }
 
     private static void animateInkBlast(ImageView blast, boolean isLeft) {
-        // Fade in and scale animation
         FadeTransition fade = new FadeTransition(Duration.millis(800), blast);
         fade.setFromValue(0);
         fade.setToValue(0.7);
@@ -84,7 +79,6 @@ public class WinningController {
         scale.setToX(1.2);
         scale.setToY(1.2);
         
-        // Rotate slightly
         RotateTransition rotate = new RotateTransition(Duration.millis(800), blast);
         rotate.setByAngle(isLeft ? -15 : 15);
         
@@ -97,13 +91,11 @@ public class WinningController {
         VBox mainWrapper = new VBox(0);
         mainWrapper.setAlignment(Pos.CENTER);
 
-        // StackPane for layering pink card with overlays
         StackPane layeredStack = new StackPane();
         layeredStack.setAlignment(Pos.CENTER);
         layeredStack.setPrefWidth(650);
         layeredStack.setPrefHeight(420);
 
-        // 1. PINK BACKGROUND CARD (Bottom layer)
         VBox pinkCard = new VBox(15);
         pinkCard.setAlignment(Pos.BOTTOM_CENTER);
         pinkCard.getStyleClass().add("winning-pink-card");
@@ -112,11 +104,9 @@ public class WinningController {
         pinkCard.setMaxWidth(650);
         pinkCard.setMaxHeight(380);
 
-        // Buttons inside pink card at bottom
         HBox buttonsBox = createButtonsBox(user, currentLevel, hearts, stage);
         pinkCard.getChildren().add(buttonsBox);
 
-        // 2. YELLOW MESSAGE BOX (Overlaying pink card)
         VBox yellowBox = new VBox(15);
         yellowBox.setAlignment(Pos.CENTER);
         yellowBox.getStyleClass().add("winning-yellow-box");
@@ -129,7 +119,6 @@ public class WinningController {
         Label levelCompleted = new Label("Level Completed");
         levelCompleted.getStyleClass().add("winning-title");
         
-        // STAR PNG inside yellow box - below the title
         ImageView starPng = loadImage("/images/star.png", 150, 200);
         if (starPng != null) {
             starPng.setOpacity(0);
@@ -139,11 +128,9 @@ public class WinningController {
             yellowBox.getChildren().add(levelCompleted);
         }
 
-        // Position yellow box slightly above center to leave room for buttons
         StackPane.setAlignment(yellowBox, Pos.CENTER);
         yellowBox.setTranslateY(-40);
 
-        // 3. BANNER WITH CONGRATULATIONS (Top overlay) - NO STAR
         StackPane bannerStack = new StackPane();
         bannerStack.setAlignment(Pos.CENTER);
         
@@ -160,7 +147,6 @@ public class WinningController {
         StackPane.setAlignment(bannerStack, Pos.TOP_CENTER);
         bannerStack.setTranslateY(-120);
 
-        // Layer everything: pink card (back) → yellow box (with star inside) → banner (top)
         layeredStack.getChildren().addAll(pinkCard, yellowBox, bannerStack);
 
         mainWrapper.getChildren().add(layeredStack);
@@ -169,7 +155,6 @@ public class WinningController {
     }
 
     private static void animateSingleStarPopup(ImageView star) {
-        // Pop-up animation for single star PNG
         FadeTransition fade = new FadeTransition(Duration.millis(500), star);
         fade.setFromValue(0);
         fade.setToValue(1);
@@ -190,30 +175,23 @@ public class WinningController {
         box.setAlignment(Pos.CENTER);
         box.setPadding(new javafx.geometry.Insets(0, 0, 25, 0));
 
-        // Settings button - navigates to Profile
         Button settingsBtn = new Button("Settings");
         settingsBtn.getStyleClass().add("winning-button");
         settingsBtn.setOnAction(e -> {
-            // Create TopBarController first (needed for ProfileController)
             TopBarController topBarController = new TopBarController(user, stage);
-            // Navigate to Profile page
             Scene profileScene = ProfileController.createScene(user, stage, topBarController);
             stage.setScene(profileScene);
         });
 
-        // Logout button
         Button logoutBtn = new Button("Logout");
         logoutBtn.getStyleClass().add("winning-button");
         logoutBtn.setOnAction(e -> {
-            // Navigate to login page
             stage.setScene(LoginController.createScene());
         });
 
-        // Continue button - goes to Home
         Button continueBtn = new Button("Continue");
         continueBtn.getStyleClass().add("winning-button-primary");
         continueBtn.setOnAction(e -> {
-            // Always go to HomeController
             HomeController.createScene(user, stage);
         });
 
@@ -230,7 +208,7 @@ public class WinningController {
             createFirework(layer, x, y);
         }));
         
-        fireworks.setCycleCount(12); // 6 seconds of fireworks
+        fireworks.setCycleCount(12);
         fireworks.play();
     }
 

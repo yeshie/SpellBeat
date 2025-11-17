@@ -22,7 +22,6 @@ public class HeartController {
         BorderPane root = new BorderPane();
         root.getStyleClass().add("miniheart-root");
 
-        // ✅ Keep TopBar exactly as before
         topBarController = new TopBarController(user, stage);
         root.setTop(topBarController.getView());
 
@@ -35,13 +34,11 @@ public class HeartController {
             int answer = i;
             ui.getNumberButtons()[i].setOnAction(e -> logic.checkAnswer(answer, () -> {
                 Platform.runLater(() -> {
-                    // Keep returning home logic exactly like before
                     currentStage.setScene(HomeLandController.createScene(currentUser, currentStage));
                 });
             }));
         }
 
-        // Navigation buttons
         ui.getBackButton().setOnAction(e -> {
             if (currentUser.getLastScreen().equals("game")) {
                 currentStage.setScene(GameController.createScene(currentUser, currentUser.getCurrentLevel(),currentStage));

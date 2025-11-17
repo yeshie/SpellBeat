@@ -7,85 +7,102 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.*;
 
 public class WordAPIService {
 
     private static final String API_KEY = "0k0b67ybvc2fyfb8de03nk4gj8qasx0tgnh9uc5i0vgjb2aah";
+    private static final Set<String> usedHints = new HashSet<>(); // Track used hints
 
-    // ✅ Inner static data holder
     public static class WordData {
         public final String word;
         public final String definition;
-        public final String hint;
+        public final List<String> hints; // Multiple hints
 
-        public WordData(String word, String definition, String hint) {
+        public WordData(String word, String definition, List<String> hints) {
             this.word = word;
             this.definition = definition;
-            this.hint = hint;
+            this.hints = hints;
         }
     }
 
- // ✅ Fetch a valid word with definition and hint, based on level
     public static WordData fetchValidWord(int level) throws Exception {
         String word;
         String definition;
-        String hint;
+        List<String> hints;
 
         int attempts = 0;
         do {
             word = fetchRandomWord(level);
             definition = fetchDefinition(word);
             attempts++;
-            if (attempts > 15) {  // Increased limit to find better words
-                throw new Exception("Unable to find a valid word after 15 attempts.");
+            if (attempts > 20) {  
+                throw new Exception("Unable to find a valid word after 20 attempts.");
             }
-        } while (isInvalidWord(word, definition, level));  // ✅ New validation method
+        } while (isInvalidWord(word, definition, level));  
 
-        hint = fetchHint(word);
+        hints = fetchMultipleHints(word);
 
-        // ✅ Console log the chosen word
-        System.out.println("Chosen word for level " + level + ": " + word + " | Definition: " + definition);
+        System.out.println("✅ Word for level " + level + ": " + word);
+        System.out.println("   Definition: " + definition);
+        System.out.println("   Available hints: " + hints.size());
 
-        return new WordData(word, definition, hint);
+        return new WordData(word, definition, hints);
     }
 
-    // ✅ Helper to check if word/definition is invalid
     private static boolean isInvalidWord(String word, String definition, int level) {
         if (word == null || definition == null) return true;
-        if (definition.length() < 10) return true;  // Too short
-        if (definition.toLowerCase().contains("see ") || 
-            definition.toLowerCase().contains("prefix") || 
-            definition.toLowerCase().contains("suffix") || 
-            definition.toLowerCase().contains("root") || 
-            definition.toLowerCase().contains("combining form")) return true;  // Reject non-full words
-        if (!word.matches("[a-zA-Z]+")) return true;  // Reject hyphens, numbers, etc.
-        if (word.length() != getExpectedLength(level)) return true;  // Exact length
+
+        // Only alphabetic
+        if (!word.matches("^[a-zA-Z]+$")) return true;
+
+        // Correct word length for the level
+        if (word.length() != getExpectedLength(level)) return true;
+
+        // Must contain at least 1 vowel for guessability
+        int vowels = word.toLowerCase().replaceAll("[^aeiou]", "").length();
+        if (vowels < 1) return true;
+
+        // Definition quality check
+        String defLower = definition.toLowerCase();
+        if (defLower.contains("see ")
+            || defLower.contains("prefix")
+            || defLower.contains("suffix")
+            || defLower.contains("root")
+            || defLower.contains("combining form")
+            || defLower.contains("obsolete")
+            || defLower.contains("archaic")
+            || defLower.contains("rare")
+            || defLower.contains("etymology")) {
+            return true;
+        }
+
+        // Must be 8–12 words
+        int wordCount = definition.trim().split("\\s+").length;
+        if (wordCount < 8 || wordCount > 12) return true;
+
         return false;
     }
 
-    // ✅ Helper to get expected word length for level
     private static int getExpectedLength(int level) {
         if (level <= 5) return 4;
         else if (level <= 10) return 5;
         else return 6;
     }
 
-
- // ✅ Random word from Wordnik with filters for practical words, adjusted by level
     public static String fetchRandomWord(int level) throws Exception {
         int minLength, maxLength;
         if (level <= 5) {
             minLength = 4;
-            maxLength = 4;  // 4-letter words for levels 1-5
+            maxLength = 4;
         } else if (level <= 10) {
             minLength = 5;
-            maxLength = 5;  // 5-letter words for levels 6-10
+            maxLength = 5;
         } else {
             minLength = 6;
-            maxLength = 8;  // Extend as needed, e.g., 6-letter for higher levels
+            maxLength = 6;
         }
 
-        // ✅ Removed minCorpusCount (not supported in free plan, causes 404)
         String apiUrl = "https://api.wordnik.com/v4/words.json/randomWord"
                 + "?hasDictionaryDef=true"
                 + "&minLength=" + minLength
@@ -93,7 +110,7 @@ public class WordAPIService {
                 + "&api_key=" + API_KEY;
 
         Exception lastException = null;
-        for (int attempt = 1; attempt <= 3; attempt++) {  // ✅ Retry up to 3 times
+        for (int attempt = 1; attempt <= 3; attempt++) {
             try {
                 URL url = new URL(apiUrl);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -108,45 +125,62 @@ public class WordAPIService {
             } catch (Exception e) {
                 lastException = e;
                 System.out.println("Wordnik attempt " + attempt + " failed: " + e.getMessage());
-                Thread.sleep(1000);  // Wait 1 second before retry
+                Thread.sleep(1000);
             }
         }
-        throw lastException;  // If all retries fail, throw the last exception
+        throw lastException;
     }
 
-
-    // ✅ Definition from Wordnik (unchanged)
     public static String fetchDefinition(String word) {
         try {
-            String apiUrl = "https://api.wordnik.com/v4/word.json/" + word + "/definitions?limit=1&includeRelated=false&useCanonical=true&api_key=" + API_KEY;
+            String apiUrl = "https://api.wordnik.com/v4/word.json/" + word
+                    + "/definitions?limit=5&includeRelated=false&useCanonical=true&api_key=" + API_KEY;
+
             URL url = new URL(apiUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
+
             BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             StringBuilder sb = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) sb.append(line);
             reader.close();
+
             JSONArray arr = new JSONArray(sb.toString());
-            if (arr.length() > 0) {
-                String rawDefinition = arr.getJSONObject(0).getString("text");
-                return stripXmlTags(rawDefinition);  // ✅ Strip tags
+
+            for (int i = 0; i < arr.length(); i++) {
+                String rawDefinition = arr.getJSONObject(i).getString("text");
+                String cleanDef = stripXmlTags(rawDefinition).trim();
+
+                // Count words
+                int words = cleanDef.split("\\s+").length;
+
+                // Short meaningful definition: 8–12 words
+                if (words >= 8 && words <= 10) {
+                    return cleanDef;
+                }
             }
-            return null;
+
+            return null; // none matched
         } catch (Exception e) {
             return null;
         }
     }
-    // ✅ Utility to strip XML/HTML tags from text
+
+
     private static String stripXmlTags(String text) {
         if (text == null) return null;
-        return text.replaceAll("<[^>]+>", "").trim();  // Removes <tag> and </tag>
+        return text.replaceAll("<[^>]+>", "").trim();
     }
 
-    // ✅ Hint generator using synonyms from Wordnik (unchanged)
-    public static String fetchHint(String word) {
+    /** ✅ NEW: Fetch multiple hints for variety */
+    public static List<String> fetchMultipleHints(String word) {
+        List<String> hints = new ArrayList<>();
+        
         try {
-            String apiUrl = "https://api.wordnik.com/v4/word.json/" + word + "/relatedWords?relationshipTypes=synonym&limitPerRelationshipType=1&api_key=" + API_KEY;
+            // Get synonyms
+            String apiUrl = "https://api.wordnik.com/v4/word.json/" + word 
+                + "/relatedWords?relationshipTypes=synonym&limitPerRelationshipType=5&api_key=" + API_KEY;
 
             URL url = new URL(apiUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -161,14 +195,46 @@ public class WordAPIService {
             JSONArray arr = new JSONArray(sb.toString());
             if (arr.length() > 0) {
                 JSONArray wordsArr = arr.getJSONObject(0).getJSONArray("words");
-                if (wordsArr.length() > 0) return wordsArr.getString(0);
+                for (int i = 0; i < wordsArr.length() && hints.size() < 5; i++) {
+                    hints.add("Synonym: " + wordsArr.getString(i));
+                }
             }
-
         } catch (Exception e) {
-            // ignore
+            // Ignore
         }
 
-        // fallback hint if no synonym found
-        return "Starts with '" + word.charAt(0) + "'";
+        // Add letter-based hints
+        hints.add("Starts with '" + word.charAt(0) + "'");
+        hints.add("Ends with '" + word.charAt(word.length() - 1) + "'");
+        hints.add("Contains " + word.length() + " letters");
+        
+        if (word.length() >= 3) {
+            hints.add("First 2 letters: " + word.substring(0, 2));
+        }
+
+        return hints;
+    }
+
+    /** ✅ NEW: Get next unused hint */
+    public static String getNextHint(List<String> availableHints, String word) {
+        String key = word.toUpperCase();
+        
+        // Find unused hint
+        for (String hint : availableHints) {
+            String hintKey = key + ":" + hint;
+            if (!usedHints.contains(hintKey)) {
+                usedHints.add(hintKey);
+                return hint;
+            }
+        }
+        
+        // All hints used, reset and return first
+        usedHints.clear();
+        return availableHints.isEmpty() ? "No more hints!" : availableHints.get(0);
+    }
+
+    /** ✅ Clear used hints for new word */
+    public static void resetHints() {
+        usedHints.clear();
     }
 }

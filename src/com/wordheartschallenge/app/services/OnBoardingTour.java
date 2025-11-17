@@ -59,12 +59,18 @@ public class OnBoardingTour {
     }
 
     public static void checkAndStart(User user, Scene mainScene) {
+        System.out.println("=== ONBOARDING CHECK ===");
+        System.out.println("User: " + user.getName());
+        System.out.println("Tutorial Completed: " + user.isTutorialCompleted());
+        
         if (!user.isTutorialCompleted()) {
-            // Delay to ensure scene is fully rendered
+            System.out.println("✅ Starting onboarding tour for new user");
             javafx.application.Platform.runLater(() -> {
                 OnBoardingTour tour = new OnBoardingTour(user, mainScene);
                 tour.start();
             });
+        } else {
+            System.out.println("⏭️ Skipping onboarding - user already completed it");
         }
     }
 
