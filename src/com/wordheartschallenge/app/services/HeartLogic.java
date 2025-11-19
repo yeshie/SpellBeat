@@ -1,6 +1,7 @@
 package com.wordheartschallenge.app.services;
 
 import com.wordheartschallenge.app.models.User;
+import com.wordheartschallenge.app.controllers.TopBarController;
 import com.wordheartschallenge.app.services.HeartAPIService;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
@@ -12,13 +13,15 @@ public class HeartLogic {
     private User user;
     private Label feedbackLabel;
     private ImageView puzzleView;
+    private TopBarController topBarController;
     private int sessionEarned = 0;
     private HeartAPIService.HeartQuestion currentQuestion;
 
-    public HeartLogic(User user, Label feedbackLabel, ImageView puzzleView) {
+    public HeartLogic(User user, Label feedbackLabel, ImageView puzzleView, TopBarController topBarController) {
         this.user = user;
         this.feedbackLabel = feedbackLabel;
         this.puzzleView = puzzleView;
+        this.topBarController = topBarController;
     }
 
     public void loadNewPuzzle() {
@@ -44,6 +47,10 @@ public class HeartLogic {
             int newTotal = user.getHearts() + 2;
             sessionEarned += 2;
             user.setHearts(newTotal);
+            
+            // ✅ Update TopBar immediately when hearts are earned
+            topBarController.updateHearts(newTotal);
+            
             feedbackLabel.setText("✅ Correct! +2 Hearts (Total Earned: " + sessionEarned + "/10)");
 
             if (sessionEarned >= 10) {
@@ -57,5 +64,7 @@ public class HeartLogic {
         }
     }
 
-    public int getSessionEarned() { return sessionEarned; }
+    public int getSessionEarned() { 
+        return sessionEarned; 
+    }
 }

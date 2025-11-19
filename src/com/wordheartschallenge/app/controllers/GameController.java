@@ -4,6 +4,7 @@ import com.wordheartschallenge.app.models.User;
 import com.wordheartschallenge.app.services.GameEngine;
 import com.wordheartschallenge.app.ui.GameUI;
 import com.wordheartschallenge.app.utils.AnimatedMessageUtil;
+import com.wordheartschallenge.app.utils.AlertUtil;
 import com.wordheartschallenge.app.database.UserProgressDAO;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -32,21 +33,21 @@ public class GameController {
     private static HBox guessBoxContainer;
 
     private static User currentUser;
+    private static int currentLevel;
     private static Stage currentStage;
     private static TopBarController topBarController;
 
     public static Scene createScene(User user, int level, Stage stage) {
         currentUser = user;
+        currentLevel = level;
         currentStage = stage;
 
         gameUI = new GameUI();
 
-        // ✅ FIXED: Definition label with dynamic sizing
         definitionLabel = new Label("Loading definition...");
         definitionLabel.getStyleClass().add("definition-label");
         definitionLabel.setWrapText(true);
         definitionLabel.setAlignment(Pos.CENTER);
-        // Allow the label to grow as needed
         definitionLabel.setMinWidth(400);
         definitionLabel.setMaxWidth(700);
         definitionLabel.setPrefWidth(600);
@@ -64,17 +65,14 @@ public class GameController {
         gameEngine = new GameEngine(user, definitionLabel, hintLabel, guessBoxContainer, guessBoxes);
         gameEngine.loadNewWord(level);
 
-        // ✅ FIXED: Hint button shows only "Hint" text
         Button hintButton = new Button("Hint");
         hintButton.setGraphic(gameUI.createIconView("/images/hint.png", 25, 25));
-        hintButton.setContentDisplay(ContentDisplay.LEFT); // Icon on left of text
-        hintButton.setGraphicTextGap(10); // Adjust spacing between icon and text (smaller = closer)
-
-        // Optional: adjust padding if needed
-        hintButton.setPadding(new Insets(0, 5, 0, 0)); // top, right, bottom, left
+        hintButton.setContentDisplay(ContentDisplay.LEFT);
+        hintButton.setGraphicTextGap(10);
+        hintButton.setPadding(new Insets(0, 5, 0, 0));
         hintButton.setPrefSize(50, 40);
         hintButton.getStyleClass().add("game-hint-button");
-        hintButton.setOnAction(e -> showHint());
+        hintButton.setOnAction(e -> requestHint());
 
         topBarController = new TopBarController(user, currentStage);
 
@@ -87,7 +85,6 @@ public class GameController {
                 createBackspaceButton(),
                 createRefreshButton()
         ));
-
 
         user.setLastScreen("Game");
         currentScene = gameUI.getScene();
@@ -111,35 +108,27 @@ public class GameController {
         submitButton.setOnAction(e -> checkWord(user, level));
         return submitButton;
     }
+
     private static Button createBackspaceButton() {
         Button backspace = new Button();
-        backspace.getStyleClass().add("game-small-button"); // small button style
-        backspace.setPrefSize(60, 40); // smaller than submit/hint
-
-        // Icon scaled up
+        backspace.getStyleClass().add("game-small-button");
+        backspace.setPrefSize(60, 40);
         backspace.setGraphic(gameUI.createIconView("/images/backspace.png", 40, 50));
-
-        backspace.setOnAction(e -> gameEngine.removeLastLetter()); // remove last letter typed
+        backspace.setOnAction(e -> gameEngine.removeLastLetter());
         return backspace;
     }
 
-
     private static Button createRefreshButton() {
         Button refresh = new Button();
-        refresh.getStyleClass().add("game-small-button"); // small button style
-        refresh.setPrefSize(60, 40); // smaller than submit/hint
-
-        // Icon scaled up
+        refresh.getStyleClass().add("game-small-button");
+        refresh.setPrefSize(60, 40);
         refresh.setGraphic(gameUI.createIconView("/images/refresh.png", 30, 30));
-
         refresh.setOnAction(e -> {
-            gameEngine.resetGuessBoxes();  // clear all letters
-            hintLabel.setText("");          // clear hint
+            gameEngine.resetGuessBoxes();
+            hintLabel.setText("");
         });
-
         return refresh;
     }
-
 
     private static void checkWord(User user, int level) {
         if (gameEngine.getCurrentWord().isEmpty()) return;
@@ -169,7 +158,6 @@ public class GameController {
             if (currentHearts > 0) {
                 int newHearts = Math.max(0, currentHearts - 1);
                 
-                // ✅ Show animated heart deduction for wrong answer
                 AnimatedMessageUtil.showHeartDeduction(currentScene, 1);
                 
                 topBarController.updateHearts(newHearts);
@@ -179,78 +167,141 @@ public class GameController {
                 hintLabel.setText("❌ Wrong! Try again.");
 
                 if (newHearts == 0) {
-                    openHeartMiniGame(user, level);
+                    showForceHeartGameDialog();
                 }
             }
         }
     }
 
-    private static void openHeartMiniGame(User user, int level) {
-        Scene heartScene = HeartController.createScene(user, user.getHearts(), currentStage);
-        currentStage.setScene(heartScene);
-
-        currentStage.setOnCloseRequest(event -> {
-            topBarController = new TopBarController(user, currentStage);
-            gameUI.setTop(topBarController.getView());
-            
-            // ✅ Recreate hint button with just "Hint" text
-            Button hintButton = new Button("Hint");
-            hintButton.setGraphic(gameUI.createIconView("/images/hint.png", 30, 30));
-            hintButton.setPrefSize(120, 40);
-            hintButton.getStyleClass().add("game-hint-button");
-            hintButton.setOnAction(e -> showHint());
-
-            gameUI.setCenter(gameUI.createGameArea(definitionLabel, guessBoxContainer, hintLabel, hintButton));
-            gameUI.setBottom(gameUI.createKeyboardArea(
-                    createKeyboardRow(KEYBOARD_ROW_1),
-                    createKeyboardRow(KEYBOARD_ROW_2),
-                    createSubmitButton(user, level),
-                    createBackspaceButton(),
-                    createRefreshButton()
-            ));
-
-            currentStage.setScene(gameUI.getScene());
-            currentScene = gameUI.getScene();
-        });
-    }
-
-    /**
-     * ✅ IMPROVED: Show hint with animated heart deduction
-     * - Gets next unique hint from the hint pool
-     * - Shows animated message box with -2 hearts
-     * - No inline text about heart cost
-     */
-    private static void showHint() {
+    /** ✅ Request hint - check hearts and show custom alert if needed */
+    private static void requestHint() {
         if (gameEngine.getCurrentWord().isEmpty()) return;
 
         int currentHearts = currentUser.getHearts();
         
-        // Check if user has enough hearts
+        // ✅ Not enough hearts → Show custom alert with OK/Cancel
         if (currentHearts < 2) {
-            hintLabel.setText("⚠️ Not enough hearts for a hint! You need 2 ❤️");
+            showHeartMiniGameDialog();
             return;
         }
 
-        // Get the next unique hint (cycles through different hints)
+        // ✅ Enough hearts → give hint
+        giveHint();
+    }
+
+    /** ✅ Give hint and deduct 2 hearts */
+    private static void giveHint() {
         String hint = gameEngine.getNextHint();
+        int newHearts = Math.max(0, currentUser.getHearts() - 2);
         
-        // Deduct 2 hearts
-        int newHearts = Math.max(0, currentHearts - 2);
-        
-        // ✅ Show animated message box with -2 hearts
         AnimatedMessageUtil.showHeartDeduction(currentScene, 2);
         
-        // Update hearts in UI and database
         topBarController.updateHearts(newHearts);
         currentUser.setHearts(newHearts);
         UserProgressDAO.updateHearts(currentUser.getId(), newHearts);
         
-        // Display the hint (no inline heart cost shown)
         hintLabel.setText("💡 " + hint);
 
-        // If hearts reach 0, open mini game
         if (newHearts == 0) {
-            openHeartMiniGame(currentUser, currentUser.getCurrentLevel());
+            showForceHeartGameDialog();
         }
+    }
+
+    /** ✅ Show custom alert asking user to play heart mini-game (with choice) */
+    private static void showHeartMiniGameDialog() {
+        AlertUtil.showCustomAlertWithActions(
+            "Not Enough Hearts! ❤️",
+            "You need 2 hearts to get a hint.\nWould you like to play the Heart Mini-Game to earn more hearts?",
+            () -> openHeartMiniGameForRefill(), // OK action
+            () -> System.out.println("User cancelled heart game") // Cancel action
+        );
+    }
+
+    /** ✅ Force user to play heart mini-game (no cancel option) */
+    private static void showForceHeartGameDialog() {
+        AlertUtil.showCustomAlert(
+            "No Hearts Left! 💔",
+            "You have 0 hearts!\nYou must play the Heart Mini-Game to continue."
+        );
+        
+        openHeartMiniGameForRefill();
+    }
+
+    /** ✅ Open Heart Mini-Game for refill (preserves state) */
+    private static void openHeartMiniGameForRefill() {
+        System.out.println("\n=== OPENING HEART MINI-GAME FOR REFILL ===");
+        System.out.println("Current word: " + gameEngine.getCurrentWord());
+        
+        // Save current guess state
+        String savedGuessState = getCurrentGuessState();
+        System.out.println("Saved guess state: " + savedGuessState);
+        
+        // Open Heart Mini-Game with callback
+        HeartController.createSceneForRefill(
+            currentUser,
+            currentStage,
+            () -> returnToGameAfterRefill(savedGuessState)
+        );
+    }
+
+    /** ✅ Return to game after heart refill */
+    private static void returnToGameAfterRefill(String savedGuessState) {
+        System.out.println("\n=== RETURNING TO WORD GAME ===");
+        System.out.println("Hearts after refill: " + currentUser.getHearts());
+        System.out.println("Restoring guess state: " + savedGuessState);
+        
+        // Rebuild UI with updated hearts
+        rebuildGameUI();
+        
+        // Restore guess state
+        restoreGuessState(savedGuessState);
+        
+        hintLabel.setText("❤️ Hearts refilled! Continue playing.");
+        
+        currentStage.setScene(currentScene);
+    }
+
+    /** ✅ Get current guess state */
+    private static String getCurrentGuessState() {
+        StringBuilder state = new StringBuilder();
+        for (Label box : guessBoxes) {
+            state.append(box.getText());
+        }
+        return state.toString();
+    }
+
+    /** ✅ Restore guess state */
+    private static void restoreGuessState(String state) {
+        for (int i = 0; i < state.length() && i < guessBoxes.size(); i++) {
+            guessBoxes.get(i).setText(String.valueOf(state.charAt(i)));
+        }
+    }
+
+    /** ✅ Rebuild UI with updated hearts */
+    private static void rebuildGameUI() {
+        gameUI = new GameUI();
+
+        Button hintButton = new Button("Hint");
+        hintButton.setGraphic(gameUI.createIconView("/images/hint.png", 25, 25));
+        hintButton.setContentDisplay(ContentDisplay.LEFT);
+        hintButton.setGraphicTextGap(10);
+        hintButton.setPadding(new Insets(0, 5, 0, 0));
+        hintButton.setPrefSize(50, 40);
+        hintButton.getStyleClass().add("game-hint-button");
+        hintButton.setOnAction(e -> requestHint());
+
+        topBarController = new TopBarController(currentUser, currentStage);
+
+        gameUI.setTop(topBarController.getView());
+        gameUI.setCenter(gameUI.createGameArea(definitionLabel, guessBoxContainer, hintLabel, hintButton));
+        gameUI.setBottom(gameUI.createKeyboardArea(
+                createKeyboardRow(KEYBOARD_ROW_1),
+                createKeyboardRow(KEYBOARD_ROW_2),
+                createSubmitButton(currentUser, currentLevel),
+                createBackspaceButton(),
+                createRefreshButton()
+        ));
+
+        currentScene = gameUI.getScene();
     }
 }

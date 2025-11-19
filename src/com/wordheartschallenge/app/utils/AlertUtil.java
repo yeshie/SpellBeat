@@ -16,7 +16,7 @@ import javafx.util.Duration;
 public class AlertUtil {
 
     /**
-     * Shows a custom themed alert popup
+     * Shows a custom themed alert popup with single OK button
      * @param title The playful title (e.g., "Oops! Try Again 😅")
      * @param message The error description
      */
@@ -25,18 +25,15 @@ public class AlertUtil {
         alertStage.initStyle(StageStyle.TRANSPARENT);
         alertStage.initModality(Modality.APPLICATION_MODAL);
 
-        // Main container
         StackPane root = new StackPane();
         root.setStyle("-fx-background-color: transparent;");
 
-        // Alert box
         VBox alertBox = new VBox(15);
         alertBox.setAlignment(Pos.CENTER);
         alertBox.getStyleClass().add("custom-alert-box");
         alertBox.setPrefWidth(400);
         alertBox.setMaxWidth(400);
 
-        // Logo at top
         try {
             ImageView logo = new ImageView(new Image(
                 AlertUtil.class.getResourceAsStream("/images/logo.png")
@@ -45,27 +42,22 @@ public class AlertUtil {
             logo.setPreserveRatio(true);
             alertBox.getChildren().add(logo);
         } catch (Exception e) {
-            // If logo fails to load, continue without it
             System.err.println("Logo not found for alert");
         }
 
-        // Title label
         Label titleLabel = new Label(title);
         titleLabel.getStyleClass().add("alert-title");
         titleLabel.setWrapText(true);
         titleLabel.setMaxWidth(350);
 
-        // Message label
         Label messageLabel = new Label(message);
         messageLabel.getStyleClass().add("alert-message");
         messageLabel.setWrapText(true);
         messageLabel.setMaxWidth(350);
 
-        // OK Button
         Button okButton = new Button("OK");
         okButton.getStyleClass().add("alert-button");
         okButton.setOnAction(e -> {
-            // Fade out animation before closing
             FadeTransition fadeOut = new FadeTransition(Duration.millis(200), root);
             fadeOut.setFromValue(1.0);
             fadeOut.setToValue(0.0);
@@ -82,7 +74,6 @@ public class AlertUtil {
 
         alertStage.setScene(scene);
 
-        // Scale-in animation when appearing
         root.setScaleX(0);
         root.setScaleY(0);
         root.setOpacity(0);
@@ -101,6 +92,109 @@ public class AlertUtil {
         
         alertStage.show();
         animation.play();
+    }
+
+    /**
+     * ✅ NEW: Shows custom alert with OK and Cancel buttons
+     * @param title Alert title
+     * @param message Alert message
+     * @param onOk Action to perform when OK is clicked
+     * @param onCancel Action to perform when Cancel is clicked
+     */
+    public static void showCustomAlertWithActions(String title, String message, 
+                                                   Runnable onOk, Runnable onCancel) {
+        Stage alertStage = new Stage();
+        alertStage.initStyle(StageStyle.TRANSPARENT);
+        alertStage.initModality(Modality.APPLICATION_MODAL);
+
+        StackPane root = new StackPane();
+        root.setStyle("-fx-background-color: transparent;");
+
+        VBox alertBox = new VBox(15);
+        alertBox.setAlignment(Pos.CENTER);
+        alertBox.getStyleClass().add("custom-alert-box");
+        alertBox.setPrefWidth(400);
+        alertBox.setMaxWidth(400);
+
+        try {
+            ImageView logo = new ImageView(new Image(
+                AlertUtil.class.getResourceAsStream("/images/logo.png")
+            ));
+            logo.setFitWidth(120);
+            logo.setPreserveRatio(true);
+            alertBox.getChildren().add(logo);
+        } catch (Exception e) {
+            System.err.println("Logo not found for alert");
+        }
+
+        Label titleLabel = new Label(title);
+        titleLabel.getStyleClass().add("alert-title");
+        titleLabel.setWrapText(true);
+        titleLabel.setMaxWidth(350);
+
+        Label messageLabel = new Label(message);
+        messageLabel.getStyleClass().add("alert-message");
+        messageLabel.setWrapText(true);
+        messageLabel.setMaxWidth(350);
+
+        // ✅ Button container with OK and Cancel
+        HBox buttonBox = new HBox(15);
+        buttonBox.setAlignment(Pos.CENTER);
+
+        Button cancelButton = new Button("Cancel");
+        cancelButton.getStyleClass().add("alert-button-cancel");
+        cancelButton.setOnAction(e -> {
+            if (onCancel != null) onCancel.run();
+            closeWithAnimation(alertStage, root);
+        });
+
+        Button okButton = new Button("OK");
+        okButton.getStyleClass().add("alert-button");
+        okButton.setOnAction(e -> {
+            if (onOk != null) onOk.run();
+            closeWithAnimation(alertStage, root);
+        });
+
+        buttonBox.getChildren().addAll(cancelButton, okButton);
+
+        alertBox.getChildren().addAll(titleLabel, messageLabel, buttonBox);
+        root.getChildren().add(alertBox);
+
+        Scene scene = new Scene(root, 450, 400);
+        scene.setFill(javafx.scene.paint.Color.TRANSPARENT);
+        scene.getStylesheets().add(AlertUtil.class.getResource("/css/style.css").toExternalForm());
+
+        alertStage.setScene(scene);
+
+        root.setScaleX(0);
+        root.setScaleY(0);
+        root.setOpacity(0);
+
+        ScaleTransition scaleIn = new ScaleTransition(Duration.millis(300), root);
+        scaleIn.setFromX(0.5);
+        scaleIn.setFromY(0.5);
+        scaleIn.setToX(1.0);
+        scaleIn.setToY(1.0);
+
+        FadeTransition fadeIn = new FadeTransition(Duration.millis(300), root);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+
+        ParallelTransition animation = new ParallelTransition(scaleIn, fadeIn);
+        
+        alertStage.show();
+        animation.play();
+    }
+
+    /**
+     * ✅ Helper method to close alert with animation
+     */
+    private static void closeWithAnimation(Stage stage, StackPane root) {
+        FadeTransition fadeOut = new FadeTransition(Duration.millis(200), root);
+        fadeOut.setFromValue(1.0);
+        fadeOut.setToValue(0.0);
+        fadeOut.setOnFinished(event -> stage.close());
+        fadeOut.play();
     }
 
     // Convenience methods for common alerts

@@ -913,6 +913,26 @@
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
 }
+.alert-button-cancel {
+    -fx-background-color: #FFF3A5;
+    -fx-text-fill: #666;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-background-radius: 20;
+    -fx-padding: 12 40;
+    -fx-cursor: hand;
+    -fx-border-color: rgba(0, 0, 0, 0.1);
+    -fx-border-radius: 20;
+    -fx-border-width: 2;
+    -fx-min-width: 120px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.15), 5, 0, 0, 2);
+}
+
+.alert-button-cancel:hover {
+    -fx-background-color: #FFE890;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
 
 /* ONBOARDING TOUR POPUP STYLES */
 
@@ -1019,3 +1039,14 @@
 }
 
 
+.pulse-animation {
+    -fx-animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* ===== Current Level Tile Glow Effect ===== */
+.level-tile:focused,
+.level-tile.current-level {
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 139, 186, 0.9), 25, 0, 0, 0);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}

@@ -8,11 +8,16 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+import javafx.animation.ScaleTransition;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import java.util.Set;
 import java.util.HashSet;
@@ -23,6 +28,7 @@ public class HomeController {
         int startLevel = HomeLogic.getStartLevel(user);
         int hearts = HomeLogic.getStartHearts(user);
         return createScene(user, startLevel, hearts, stage);
+        
     }
 
     public static Scene createScene(User user, int startLevel, int hearts, Stage stage) {
@@ -57,6 +63,13 @@ public class HomeController {
             StackPane actionContainer = createActionContainer(homeUI, user, i, stage, completed, playable, locked);
 
             levelTiles[i - 1] = createUniformTile(titleLabel, iconContainer, starsContainer, actionContainer);
+            levelTiles[i - 1].setId("level-tile-" + i);
+            if (playable) {
+            	 levelTiles[i - 1].setStyle(
+            		        "-fx-effect: dropshadow(three-pass-box, rgba(255,139,186,0.9), 28, 0.3, 0, 0);"
+            		    );
+                applyGlowAndPulse(levelTiles[i - 1]);   // ⭐ Glow & Pulse Here
+            }
         }
 
         Node levelSelectArea = homeUI.createLevelSelectArea((Node[]) levelTiles);
@@ -68,6 +81,9 @@ public class HomeController {
         root.setTop(topBar.getView());
 
         root.setCenter(levelSelectArea);
+     // AUTO SCROLL to current level after scene is fully rendered
+        final int scrollToLevel = nextLevel;
+        Platform.runLater(() -> scrollToLevel(levelSelectArea, scrollToLevel));
 
         Scene scene = new Scene(root, 1000, 650);
         scene.getStylesheets().add(HomeController.class.getResource("/css/style.css").toExternalForm());
@@ -75,6 +91,36 @@ public class HomeController {
         stage.show();
 
         return scene;
+    }
+    private static void scrollToLevel(Node levelSelectArea, int levelNumber) {
+        ScrollPane scrollPane = findScrollPane(levelSelectArea);
+
+        if (scrollPane != null) {
+            Node tile = scrollPane.getContent().lookup("#level-tile-" + levelNumber);
+
+            if (tile != null) {
+                double tileX = tile.getLayoutX();
+                double containerWidth = scrollPane.getContent().getBoundsInLocal().getWidth();
+                double viewportWidth = scrollPane.getViewportBounds().getWidth();
+
+                double scrollPos = (tileX - (viewportWidth / 2) + (tile.getBoundsInLocal().getWidth() / 2))
+                                   / (containerWidth - viewportWidth);
+                scrollPos = Math.max(0, Math.min(1, scrollPos));
+
+                scrollPane.setHvalue(scrollPos);
+            }
+        }
+    }
+    private static ScrollPane findScrollPane(Node node) {
+        if (node instanceof ScrollPane) return (ScrollPane) node;
+
+        if (node instanceof javafx.scene.Parent parent) {
+            for (Node child : parent.getChildrenUnmodifiable()) {
+                ScrollPane result = findScrollPane(child);
+                if (result != null) return result;
+            }
+        }
+        return null;
     }
 
     private static VBox createUniformTile(Label titleLabel, StackPane iconContainer, 
@@ -211,6 +257,7 @@ public class HomeController {
             content = bannerWithText;
             
         } else if (playable) {
+        	
             Button playButton = new Button("Let's Play!");
             playButton.getStyleClass().add("level-play-button");
             playButton.setAlignment(Pos.CENTER);
@@ -230,4 +277,23 @@ public class HomeController {
         container.getChildren().add(content);
         return container;
     }
+    private static void applyGlowAndPulse(VBox tile) {
+        // Glow effect
+        DropShadow glow = new DropShadow();
+        glow.setColor(javafx.scene.paint.Color.web("#FF8BBA")); // pinkish glow
+        glow.setRadius(35);
+        glow.setSpread(0.3);
+        tile.setEffect(glow);
+
+        // Pulse animation
+        ScaleTransition pulse = new ScaleTransition(Duration.seconds(1.3), tile);
+        pulse.setFromX(1.0);
+        pulse.setFromY(1.0);
+        pulse.setToX(1.06);
+        pulse.setToY(1.06);
+        pulse.setCycleCount(ScaleTransition.INDEFINITE);
+        pulse.setAutoReverse(true);
+        pulse.play();
+    }
+
 }
